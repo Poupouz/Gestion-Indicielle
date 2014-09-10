@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using LibrarySQL;
+using Gestion_Indicielle.Models;
 
 
 namespace Gestion_Indicielle
@@ -28,12 +29,21 @@ namespace Gestion_Indicielle
         {
             InitializeComponent();
             DataRetriever dr = new DataRetriever();
-            ArrayList al = dr.tickers();
+            ArrayList al = dr.getTickers();
 
-            foreach (var v in al)
+            AverageHistoricYield ahy = new AverageHistoricYield();
+            double[,] matrice = ahy.getMatrixOfPrice(al, new DateTime(2012, 2, 3, 0, 0, 0), 5);
+            
+
+            for (int i = 0; i < matrice.GetLength(0); i++)
             {
-                Console.WriteLine(v);
+                for (int j = 0; j < matrice.GetLength(1); j++)
+                {
+                    Console.Write(matrice[i, j] + " ");
+                }
+                Console.WriteLine();
             }
+
 
         }
     }

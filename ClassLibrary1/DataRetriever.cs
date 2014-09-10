@@ -22,19 +22,43 @@ namespace LibrarySQL
             this.DataRetrieverDataContext = new DataRetrieverDataContext();
         }
 
-        public ArrayList tickers()
+
+        public ArrayList getTickers()
         {
-            ArrayList names = new ArrayList();
+            using (DataRetrieverDataContext dc = new DataRetrieverDataContext())
+            {
+                var req = (from lines in dc.HistoComponents select lines.name).Distinct().ToArray();
+                return new ArrayList(req);
+            }
+        }
+
+        public double[] getData(System.DateTime date , String name_Entrprise , int period)
+        {
+            using (DataRetrieverDataContext dc = new DataRetrieverDataContext()){
+                double[] resultat = new double[period];
+                var req = (from lines in dc.HistoComponents where lines.date >= date && lines.name.Equals(name_Entrprise)  select lines.value).ToArray();
+                for (int i = 0; i < period; i++)
+                {
+                    resultat[i] = req[i];
+                }
+                return resultat;
+            }
+        }
+
+        public int nbDate()
+        {
+            ArrayList dates = new ArrayList();
             System.Data.Linq.Table<HistoComponents> table = DataRetrieverDataContext.HistoComponents;
 
-            foreach(HistoComponents element in table){
-                if (!names.Contains(element.name))
+            foreach (HistoComponents element in table)
+            {
+                if (!dates.Contains(element.date))
                 {
-                    names.Add(element.name);
+                    dates.Add(element.date);
                 }
             }
 
-            return names;
+            return dates.Count;
         }
 
     }

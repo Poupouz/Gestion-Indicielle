@@ -54,6 +54,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\AverageHistoricYield.cs" />
     <Compile Include="View\WindowActions.xaml.cs">
       <DependentUpon>WindowActions.xaml</DependentUpon>
     </Compile>
@@ -102,7 +103,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
     <Folder Include="ViewModels\" />
   </ItemGroup>
   <ItemGroup>
