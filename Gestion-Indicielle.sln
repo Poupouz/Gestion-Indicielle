@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WallRiskEngine", "WallRiskE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{3710E196-FF4D-4B2F-B86E-DF6C02B76507}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WallRiskEngineUnitTests", "WallRiskEngineUnitTests\WallRiskEngineUnitTests.csproj", "{1BAD90BF-74C9-45A2-A870-E1D1EB056EE9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{3710E196-FF4D-4B2F-B86E-DF6C02B76507}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3710E196-FF4D-4B2F-B86E-DF6C02B76507}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3710E196-FF4D-4B2F-B86E-DF6C02B76507}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BAD90BF-74C9-45A2-A870-E1D1EB056EE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BAD90BF-74C9-45A2-A870-E1D1EB056EE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BAD90BF-74C9-45A2-A870-E1D1EB056EE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BAD90BF-74C9-45A2-A870-E1D1EB056EE9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
