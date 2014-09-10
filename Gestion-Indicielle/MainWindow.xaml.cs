@@ -17,7 +17,6 @@ using System.Windows.Shapes;
 using LibrarySQL;
 using Gestion_Indicielle.Models;
 
-
 namespace Gestion_Indicielle
 {
     /// <summary>
@@ -28,6 +27,12 @@ namespace Gestion_Indicielle
         public MainWindow()
         {
             InitializeComponent();
+            MyDataGrid.ItemsSource = LoadCompanies();
+        }
+
+        private List<Object> LoadCompanies()
+        {
+            List<Object> result=new List<Object>();
             DataRetriever dr = new DataRetriever();
             ArrayList al = dr.getTickers();
 
@@ -35,16 +40,19 @@ namespace Gestion_Indicielle
             double[,] matrice = ahy.getMatrixOfPrice(al, new DateTime(2012, 2, 3, 0, 0, 0), 5);
             
 
-            for (int i = 0; i < matrice.GetLength(0); i++)
+            foreach(var v in al)
             {
-                for (int j = 0; j < matrice.GetLength(1); j++)
-                {
-                    Console.Write(matrice[i, j] + " ");
-                }
-                Console.WriteLine();
+                result.Add(new { Name = v, IsInPortfolio=false });
             }
-
+            
+            return result;  
 
         }
+
+
+            
+
+        
+
     }
 }
