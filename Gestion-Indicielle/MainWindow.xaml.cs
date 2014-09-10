@@ -28,6 +28,8 @@ namespace Gestion_Indicielle
         {
             InitializeComponent();
             MyDataGrid.ItemsSource = LoadCompanies();
+            
+            
         }
 
         private List<Object> LoadCompanies()
@@ -40,12 +42,19 @@ namespace Gestion_Indicielle
 
             AverageHistoricYield ahy = new AverageHistoricYield();
             double[,] matrice = ahy.getMatrixOfPrice(al, new DateTime(2012, 2, 3, 0, 0, 0), 5);
-            
-
-            foreach(var v in al)
+            for (int i = 0; i < matrice.GetLength(0); i++)
             {
-                result.Add(new { Name = v, IsInPortfolio=false });
+                for (int j = 0; j < matrice.GetLength(1); j++)
+                {
+                    Console.Write(matrice[i, j] + " ");
+                }
+                Console.WriteLine();
             }
+
+                foreach (var v in al)
+                {
+                    result.Add(new { Name = v, IsInPortfolio = false });
+                }
             
             return result;  
 
