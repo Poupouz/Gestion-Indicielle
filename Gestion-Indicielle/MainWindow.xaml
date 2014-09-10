@@ -9,9 +9,6 @@
                     <DataGrid x:Name="MyDataGrid" VerticalAlignment="Top" HorizontalAlignment="Left" Width="500"  RowHeight="30" ColumnWidth="250" Height="350" >
                         
                     </DataGrid>    
-                    
-
-
                 </Grid>
             </TabItem>
             <TabItem Header="Numerical Data" HorizontalAlignment="Center" Height="Auto" VerticalAlignment="Center" Width="Auto" Margin="-2,-2,0,2">
@@ -21,7 +18,7 @@
             </TabItem>
             <TabItem Header="Graphical Data" HorizontalAlignment="Center" Height="Auto" VerticalAlignment="Center" Width="Auto" Margin="-2,-2,0,2">
                 <Grid Background="#FFE5E5E5">
-
+                    
                 </Grid>
             </TabItem>
         </TabControl>
