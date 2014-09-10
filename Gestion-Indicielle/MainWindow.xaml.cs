@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using LibrarySQL;
 
 namespace Gestion_Indicielle
 {
@@ -29,17 +32,21 @@ namespace Gestion_Indicielle
         private List<Object> LoadCompanies()
         {
             List<Object> result=new List<Object>();
-            result.Add(new {Name="Michelin", IsActive=false});
-            result.Add(new { Name = "Total" });
-            result.Add(new { Name = "Total" });
-            result.Add(new { Name = "Total" });
-            result.Add(new { Name = "Total" });
-            result.Add(new { Name = "Total" });
-            result.Add(new { Name = "Total" });
-            result.Add(new { Name = "Total" });
-            result.Add(new { Name = "Total" });
+            DataRetriever dr = new DataRetriever();
+            ArrayList al = dr.tickers();
+
+            foreach (var v in al)
+            {
+                result.Add(new { Name = v, IsInPortfolio=false });
+            }
+            
             return result;  
         }
+
+
+            
+
+        
 
     }
 }
