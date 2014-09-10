@@ -48,5 +48,13 @@ namespace Gestion_Indicielle.Models
             double[,] res = API.computeSimpleNetReturns(matrixOfPrice,horizon);
             return res;
         }
+
+        //Renvoie la matrice de covariance de la matrice de rentabilité
+        public double[,] getCovMatrix(double[,] returnMatrix)
+        {
+            double[,] res = API.computeCovarianceMatrix(returnMatrix);
+            return res;
+
+        }
     }
 }
