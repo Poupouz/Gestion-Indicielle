@@ -23,6 +23,23 @@ namespace Gestion_Indicielle
         public MainWindow()
         {
             InitializeComponent();
+            MyDataGrid.ItemsSource = LoadCompanies();
         }
+
+        private List<Object> LoadCompanies()
+        {
+            List<Object> result=new List<Object>();
+            result.Add(new {Name="Michelin", IsActive=false});
+            result.Add(new { Name = "Total" });
+            result.Add(new { Name = "Total" });
+            result.Add(new { Name = "Total" });
+            result.Add(new { Name = "Total" });
+            result.Add(new { Name = "Total" });
+            result.Add(new { Name = "Total" });
+            result.Add(new { Name = "Total" });
+            result.Add(new { Name = "Total" });
+            return result;  
+        }
+
     }
 }
