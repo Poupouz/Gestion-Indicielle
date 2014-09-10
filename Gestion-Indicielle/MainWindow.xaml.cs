@@ -41,12 +41,16 @@ namespace Gestion_Indicielle
             Console.WriteLine(dr.nbDate());
 
             AverageHistoricYield ahy = new AverageHistoricYield();
+
             double[,] matrice = ahy.getMatrixOfPrice(al, new DateTime(2012, 2, 3, 0, 0, 0), 5);
-            for (int i = 0; i < matrice.GetLength(0); i++)
+
+            double[,] returnsMatrix = ahy.getReturnsMatrix(matrice,1);
+
+            for (int i = 0; i < returnsMatrix.GetLength(0); i++)
             {
-                for (int j = 0; j < matrice.GetLength(1); j++)
+                for (int j = 0; j < returnsMatrix.GetLength(1); j++)
                 {
-                    Console.Write(matrice[i, j] + " ");
+                    Console.Write(returnsMatrix[i, j] + " ");
                 }
                 Console.WriteLine();
             }

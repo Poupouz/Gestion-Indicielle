@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LibrarySQL;
 using System.Collections;
+using WallRiskEngine;
 
 namespace Gestion_Indicielle.Models
 {
@@ -41,6 +42,11 @@ namespace Gestion_Indicielle.Models
 
           return res;
         }
- 
+
+        public double[,] getReturnsMatrix(double[,] matrixOfPrice, int horizon)
+        {
+            double[,] res = API.computeSimpleNetReturns(matrixOfPrice,horizon);
+            return res;
+        }
     }
 }

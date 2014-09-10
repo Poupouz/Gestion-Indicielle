@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -106,6 +107,10 @@
     <ProjectReference Include="..\ClassLibrary1\LibrarySQL.csproj">
       <Project>{c752f844-d1fa-4052-8448-af110553b882}</Project>
       <Name>LibrarySQL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WallRiskEngine\WallRiskEngine.csproj">
+      <Project>{d6dab470-733a-4911-a440-f3da2239d929}</Project>
+      <Name>WallRiskEngine</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

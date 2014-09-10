@@ -56,7 +56,7 @@ namespace WallRiskEngine
                     Debug.Assert(assetsValues[i, j] > 0, "Asset Values matrix should have strictly positive values");
                 }
 			}
-            double[,] assetsReturns = new double[nbValues, nbAssets];
+            double[,] assetsReturns = new double[nbValues-horizon, nbAssets];
             int info = 0;
             /* Call C library */
             int exitCode = WREmodelingReturns(ref nbValues, ref nbAssets, assetsValues, ref horizon, assetsReturns, ref info);
