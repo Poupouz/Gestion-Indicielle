@@ -22,7 +22,7 @@ namespace LibrarySQL
             this.DataRetrieverDataContext = new DataRetrieverDataContext();
         }
 
-
+        //Méthode permettant d'extraire les tickers distincts
         public ArrayList getTickers()
         {
             using (DataRetrieverDataContext dc = new DataRetrieverDataContext())
@@ -32,6 +32,7 @@ namespace LibrarySQL
             }
         }
 
+        //Méthode permettant d'extraire les prix de l'action d'une entreprise sur une période donnée 
         public double[] getData(System.DateTime date , String name_Entrprise , int period)
         {
             using (DataRetrieverDataContext dc = new DataRetrieverDataContext()){
@@ -47,6 +48,7 @@ namespace LibrarySQL
 
         public int nbDate()
         {
+
             ArrayList dates = new ArrayList();
             System.Data.Linq.Table<HistoComponents> table = DataRetrieverDataContext.HistoComponents;
 
