@@ -46,21 +46,15 @@ namespace LibrarySQL
             }
         }
 
+        //Méthode permettant d'extraire les dates distinctes
         public int nbDate()
         {
-
-            ArrayList dates = new ArrayList();
-            System.Data.Linq.Table<HistoComponents> table = DataRetrieverDataContext.HistoComponents;
-
-            foreach (HistoComponents element in table)
+            using (DataRetrieverDataContext dc = new DataRetrieverDataContext())
             {
-                if (!dates.Contains(element.date))
-                {
-                    dates.Add(element.date);
-                }
+                var req = (from lines in dc.HistoComponents select lines.date).Distinct().ToArray();
+                return req.GetLength(0);
+                
             }
-
-            return dates.Count;
         }
 
     }

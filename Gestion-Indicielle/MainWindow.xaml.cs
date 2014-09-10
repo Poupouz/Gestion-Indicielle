@@ -31,6 +31,8 @@ namespace Gestion_Indicielle
             DataRetriever dr = new DataRetriever();
             ArrayList al = dr.getTickers();
 
+            Console.WriteLine(dr.nbDate());
+
             AverageHistoricYield ahy = new AverageHistoricYield();
             double[,] matrice = ahy.getMatrixOfPrice(al, new DateTime(2012, 2, 3, 0, 0, 0), 5);
             
