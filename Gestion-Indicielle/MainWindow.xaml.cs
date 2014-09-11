@@ -41,38 +41,27 @@ namespace Gestion_Indicielle
 
 
             /* ------ A ENLEVER POUR PLUS TARD ------ */
-            Console.WriteLine(dr.nbDate());
-            AverageHistoricYield ahy = new AverageHistoricYield();
+            //Console.WriteLine(dr.nbDate());
+            
+           // AlgorythmOfTracking algo = new AlgorythmOfTracking(al, 1000.0, 1000, 1000);
+            //double[] coeff = algo.weightsComputation();
 
-            double[,] matrice = ahy.getMatrixOfPrice(al, new DateTime(2006, 1, 2, 0, 0, 0), 1000);
+            //ArrayList mesRes = algo.tracking();
 
-            double[,] returnsMatrix = ahy.getReturnsMatrix(matrice,1);
+           //foreach (double d in mesRes)
+           // {
+           //     Console.WriteLine(d);
+           // }
 
-            double[] meanReturns = ahy.getMeanReturn(returnsMatrix);
+            /*double somme = 0.0;
+                for (int i = 0; i < coeff.GetLength(0); i++)
+                {
+                    Console.WriteLine(coeff[i]);
+                    somme += coeff[i];
+                }*/
 
-            double[,] covMatrix = ahy.getCovMatrix(returnsMatrix);
+                //Console.WriteLine(somme);
 
-            double[,] bench = dr.getDataBenchmark(new DateTime(2006, 1, 2, 0, 0, 0), 1000);
-            double[,] returnsBench = ahy.getReturnsMatrix(bench, 1);
-
-            double[,] concatMat = ahy.concatMatrix(matrice,bench);
-            double[,] covConcat = ahy.getCovMatrix(concatMat);
-
-            double[,] covMatrixExtract = ahy.extractCovReturnAssets(covConcat,covConcat.GetLength(0)-1 );
-            double[]  covVectorExtract = ahy.extractCovReturnBench(covConcat,covConcat.GetLength(0) -1 );
-            double varExtract = ahy.extractVarianceBench(covConcat,covConcat.GetLength(0) -1 );
-
-
-            double[] coeff = API.OptimPortfolioWeight(covMatrixExtract, meanReturns, covVectorExtract, ahy.getMeanReturn(returnsBench)[0],0.000000001);
-            Console.WriteLine(coeff.GetLength(0));
-            double somme = 0.0;
-            for (int i = 0; i < coeff.GetLength(0); i++)
-            {
-                Console.WriteLine(coeff[i]);
-                somme += coeff[i];
-            }
-
-            Console.WriteLine(somme);
 
                 /*-------------------------------------------------------*/
 
