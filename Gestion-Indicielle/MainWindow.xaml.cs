@@ -19,6 +19,7 @@ using Gestion_Indicielle.Models;
 using Gestion_Indicielle.ViewModels;
 using Microsoft.Windows.Controls;
 using System.Windows.Controls.DataVisualization.Charting;
+using WallRiskEngine;
 
 namespace Gestion_Indicielle
 {
@@ -31,9 +32,11 @@ namespace Gestion_Indicielle
         {
             InitializeComponent();
             MyDataGrid.ItemsSource = LoadCompanies();
+
             ViewCharts Chart = new ViewCharts();
             Chart.createSerie();
             lineChart.Series.Add(Chart.series.ElementAt(0));
+
         }
 
         private List<Object> LoadCompanies()
@@ -42,13 +45,49 @@ namespace Gestion_Indicielle
             DataRetriever dr = new DataRetriever();
             ArrayList al = dr.getTickers();
 
-            AverageHistoricYield ahy = new AverageHistoricYield();
-            double[,] matrice = ahy.getMatrixOfPrice(al, new DateTime(2012, 2, 3, 0, 0, 0), 5);
 
-            foreach(var v in al)
+            /* ------ A ENLEVER POUR PLUS TARD ------ */
+            Console.WriteLine(dr.nbDate());
+            AverageHistoricYield ahy = new AverageHistoricYield();
+
+
+            double[,] matrice = ahy.getMatrixOfPrice(al, new DateTime(2006, 1, 2, 0, 0, 0), 1000);
+
+            double[,] returnsMatrix = ahy.getReturnsMatrix(matrice,1);
+
+            double[] meanReturns = ahy.getMeanReturn(returnsMatrix);
+
+            double[,] covMatrix = ahy.getCovMatrix(returnsMatrix);
+
+            double[,] bench = dr.getDataBenchmark(new DateTime(2006, 1, 2, 0, 0, 0), 1000);
+            double[,] returnsBench = ahy.getReturnsMatrix(bench, 1);
+
+            double[,] concatMat = ahy.concatMatrix(matrice,bench);
+            double[,] covConcat = ahy.getCovMatrix(concatMat);
+
+            double[,] covMatrixExtract = ahy.extractCovReturnAssets(covConcat,covConcat.GetLength(0)-1 );
+            double[]  covVectorExtract = ahy.extractCovReturnBench(covConcat,covConcat.GetLength(0) -1 );
+            double varExtract = ahy.extractVarianceBench(covConcat,covConcat.GetLength(0) -1 );
+
+
+            double[] coeff = API.OptimPortfolioWeight(covMatrixExtract, meanReturns, covVectorExtract, ahy.getMeanReturn(returnsBench)[0], 0.000000001);
+            Console.WriteLine(coeff.GetLength(0));
+            double somme = 0.0;
+            for (int i = 0; i < coeff.GetLength(0); i++)
             {
-                result.Add(new { Name = v, IsInPortfolio=false });
+                Console.WriteLine(coeff[i]);
+                somme += coeff[i];
             }
+
+            Console.WriteLine(somme);
+
+                /*-------------------------------------------------------*/
+
+
+                foreach (var v in al)
+                {
+                    result.Add(new { Name = v, IsInPortfolio = false });
+                }
             
             return result;  
 

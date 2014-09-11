@@ -46,21 +46,30 @@ namespace LibrarySQL
             }
         }
 
+        //Méthode permettant d'extraire les dates distinctes
         public int nbDate()
         {
-
-            ArrayList dates = new ArrayList();
-            System.Data.Linq.Table<HistoComponents> table = DataRetrieverDataContext.HistoComponents;
-
-            foreach (HistoComponents element in table)
+            using (DataRetrieverDataContext dc = new DataRetrieverDataContext())
             {
-                if (!dates.Contains(element.date))
-                {
-                    dates.Add(element.date);
-                }
+                var req = (from lines in dc.HistoComponents select lines.date).Distinct().ToArray();
+                return req.GetLength(0);
+                
             }
+        }
 
-            return dates.Count;
+        //Méthode permettant d'extraire les valeurs du benchmark
+        public double[,] getDataBenchmark(System.DateTime date, int period)
+        {
+            using (DataRetrieverDataContext dc = new DataRetrieverDataContext())
+            {
+                double[,] resultat = new double[period,1];
+                var req = (from lines in dc.HistoIndices where lines.date >= date select lines.value).ToArray();
+                for (int i = 0; i < period; i++)
+                {
+                    resultat[i,0] = req[i]; 
+                }
+                return resultat;
+            }
         }
 
     }
