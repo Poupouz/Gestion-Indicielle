@@ -33,6 +33,9 @@ namespace LibrarySQL
     partial void InsertHistoComponents(HistoComponents instance);
     partial void UpdateHistoComponents(HistoComponents instance);
     partial void DeleteHistoComponents(HistoComponents instance);
+    partial void InsertHistoIndices(HistoIndices instance);
+    partial void UpdateHistoIndices(HistoIndices instance);
+    partial void DeleteHistoIndices(HistoIndices instance);
     #endregion
 		
 		public DataRetrieverDataContext() : 
@@ -72,6 +75,14 @@ namespace LibrarySQL
 				return this.GetTable<HistoComponents>();
 			}
 		}
+		
+		public System.Data.Linq.Table<HistoIndices> HistoIndices
+		{
+			get
+			{
+				return this.GetTable<HistoIndices>();
+			}
+		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.HistoComponents")]
@@ -104,6 +115,116 @@ namespace LibrarySQL
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="NVarChar(50) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this.OnnameChanging(value);
+					this.SendPropertyChanging();
+					this._name = value;
+					this.SendPropertyChanged("name");
+					this.OnnameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_date", DbType="DateTime NOT NULL", IsPrimaryKey=true)]
+		public System.DateTime date
+		{
+			get
+			{
+				return this._date;
+			}
+			set
+			{
+				if ((this._date != value))
+				{
+					this.OndateChanging(value);
+					this.SendPropertyChanging();
+					this._date = value;
+					this.SendPropertyChanged("date");
+					this.OndateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_value", DbType="Float NOT NULL")]
+		public double value
+		{
+			get
+			{
+				return this._value;
+			}
+			set
+			{
+				if ((this._value != value))
+				{
+					this.OnvalueChanging(value);
+					this.SendPropertyChanging();
+					this._value = value;
+					this.SendPropertyChanged("value");
+					this.OnvalueChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.HistoIndices")]
+	public partial class HistoIndices : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private string _name;
+		
+		private System.DateTime _date;
+		
+		private double _value;
+		
+    #region Définitions de méthodes d'extensibilité
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnnameChanging(string value);
+    partial void OnnameChanged();
+    partial void OndateChanging(System.DateTime value);
+    partial void OndateChanged();
+    partial void OnvalueChanging(double value);
+    partial void OnvalueChanged();
+    #endregion
+		
+		public HistoIndices()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="NChar(10) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
 		public string name
 		{
 			get

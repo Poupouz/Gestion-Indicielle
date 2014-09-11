@@ -8,5 +8,11 @@
         <elementListCompartment Id="b70ed9bf-f8a6-4f9c-b39f-720674c2992f" absoluteBounds="3.515, 2.96, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
+    <classShape Id="ee5c2939-1aaf-4b8d-b415-7928ebe588de" absoluteBounds="6.25, 2.5, 2, 1.3862939453125">
+      <DataClassMoniker Name="/DataRetrieverDataContext/HistoIndices" />
+      <nestedChildShapes>
+        <elementListCompartment Id="8a61e600-4810-4357-9e7e-01c6219208e8" absoluteBounds="6.265, 2.96, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
   </nestedChildShapes>
 </ordesignerObjectsDiagram>

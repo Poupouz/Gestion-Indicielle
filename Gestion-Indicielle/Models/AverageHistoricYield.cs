@@ -49,6 +49,7 @@ namespace Gestion_Indicielle.Models
             return res;
         }
 
+
         //Renvoie la matrice de covariance de la matrice de rentabilité
         public double[,] getCovMatrix(double[,] returnMatrix)
         {
@@ -78,5 +79,69 @@ namespace Gestion_Indicielle.Models
             
             return res;
         }
+
+        //Permet la concatenation de la matrice data avec celle de la benchmark
+        public double[,] concatMatrix(double[,] data, double[,] bench)
+        {
+            if (data.GetLength(0) == bench.GetLength(0))
+            {
+                double[,] res = new double[data.GetLength(0), data.GetLength(1) + bench.GetLength(1)];
+
+                for (int i = 0; i < res.GetLength(0); i++)
+                {
+                    for (int j = 0; j < data.GetLength(1); j++)
+                    {
+                        res[i, j] = data[i, j];
+                    }
+                    for (int k = 0; k < bench.GetLength(1); k++)
+                    {
+                        res[i, data.GetLength(1) + k] = bench[i, k];
+                    }
+                }
+
+                return res;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        //Permet d extraire la matrice de variance-covariance des actifs
+        public double[,] extractCovReturnAssets(double[,] covMat, int nbAsset)
+        {
+            double[,] res = new double[nbAsset, nbAsset];
+
+            for (int i = 0; i < res.GetLength(0); i++)
+            {
+                for (int j = 0; j < res.GetLength(1); j++)
+                {
+                    res[i, j] = covMat[i, j];
+                }
+            }
+          
+            return res;
+        }
+
+        //Permet d'extraire le vecteur de cov entre les actifs et le benchmark
+        public double[] extractCovReturnBench(double[,] covMat, int nbAsset)
+        {
+            double[] res = new double[nbAsset];
+
+            for (int i = 0; i < res.GetLength(0); i++)
+            {
+                res[i] = covMat[i,nbAsset];
+            }
+
+            return res;
+        }
+
+
+        //Permet d extraire la variance du benchmark
+        public double extractVarianceBench(double[,] covMat, int nbAsset)
+        {
+            return covMat[nbAsset, nbAsset];
+        }
+
     }
 }

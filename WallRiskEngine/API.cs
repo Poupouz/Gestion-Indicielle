@@ -47,7 +47,7 @@ namespace WallRiskEngine
             int nbAssets = assetsValues.GetLength(1);
             /* check the arguments */
             Debug.Assert(nbValues >= 2, "Asset Values matrix must have more than 2 values");
-            Debug.Assert(nbAssets >= 1, "Asset Values matrix must have more than 2 assets");
+            Debug.Assert(nbAssets >= 1, "Asset Values matrix must have more than 1 assets");
             Debug.Assert(0 < horizon && horizon < nbValues, "Horizon must be positive and less than number of values of the matrix");
             for (int i = 0; i < nbValues; i++)
 			{

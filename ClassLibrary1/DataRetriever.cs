@@ -57,5 +57,20 @@ namespace LibrarySQL
             }
         }
 
+        //Méthode permettant d'extraire les valeurs du benchmark
+        public double[,] getDataBenchmark(System.DateTime date, int period)
+        {
+            using (DataRetrieverDataContext dc = new DataRetrieverDataContext())
+            {
+                double[,] resultat = new double[period,1];
+                var req = (from lines in dc.HistoIndices where lines.date >= date select lines.value).ToArray();
+                for (int i = 0; i < period; i++)
+                {
+                    resultat[i,0] = req[i]; 
+                }
+                return resultat;
+            }
+        }
+
     }
 }
