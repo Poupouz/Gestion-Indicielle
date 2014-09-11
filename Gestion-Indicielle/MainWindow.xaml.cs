@@ -68,8 +68,6 @@ namespace Gestion_Indicielle
             double[,] covMatrixExtract = ahy.extractCovReturnAssets(covConcat,covConcat.GetLength(0)-1 );
             double[]  covVectorExtract = ahy.extractCovReturnBench(covConcat,covConcat.GetLength(0) -1 );
             double varExtract = ahy.extractVarianceBench(covConcat,covConcat.GetLength(0) -1 );
-
-
             double[] coeff = API.OptimPortfolioWeight(covMatrixExtract, meanReturns, covVectorExtract, ahy.getMeanReturn(returnsBench)[0], 0.000000001);
             Console.WriteLine(coeff.GetLength(0));
             double somme = 0.0;
