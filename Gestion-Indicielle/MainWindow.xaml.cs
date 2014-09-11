@@ -47,16 +47,25 @@ namespace Gestion_Indicielle
 
             double[,] returnsMatrix = ahy.getReturnsMatrix(matrice,1);
 
+            double[] meanReturns = ahy.getMeanReturn(returnsMatrix);
+
             double[,] covMatrix = ahy.getCovMatrix(returnsMatrix);
 
-            for (int i = 0; i < covMatrix.GetLength(0); i++)
+            //Affichage du table
+            foreach (double d in meanReturns)
+            {
+                Console.WriteLine(d);
+            }
+
+            //Affichage de matrice
+            /*for (int i = 0; i < covMatrix.GetLength(0); i++)
             {
                 for (int j = 0; j < covMatrix.GetLength(1); j++)
                 {
                     Console.Write(covMatrix[i, j] + " ");
                 }
                 Console.WriteLine();
-            }
+            }*/
 
                 foreach (var v in al)
                 {

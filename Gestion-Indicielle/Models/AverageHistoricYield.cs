@@ -56,5 +56,27 @@ namespace Gestion_Indicielle.Models
             return res;
 
         }
+
+        public double[] getMeanReturn(double[,] returnMatrix)
+        {
+            double[] res = new double[returnMatrix.GetLength(1)];
+
+            //On parcourt chacun des titres
+            for (int j = 0; j < returnMatrix.GetLength(1); j++)
+            {
+                double sum = 0.0;
+
+                //On parcourt chacune des dates pour une action donnée
+                for (int i = 0; i < returnMatrix.GetLength(0); i++)
+                {
+                    sum += returnMatrix[i, j];
+                }
+
+                res[j] = sum/returnMatrix.GetLength(0);
+
+            }
+            
+            return res;
+        }
     }
 }
