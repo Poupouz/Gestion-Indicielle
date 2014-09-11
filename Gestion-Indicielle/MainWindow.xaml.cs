@@ -28,13 +28,22 @@ namespace Gestion_Indicielle
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        private double[] benchmarkIndex;
+        private int numberDays;
+
         public MainWindow()
         {
             InitializeComponent();
-            MyDataGrid.ItemsSource = LoadCompanies();
+            numberDays = 100;
+            DataRetriever dr = new DataRetriever();
+            benchmarkIndex = dr.extractColumnIndex(dr.getDataBenchmark(new DateTime(2012, 2, 3, 0, 0, 0), numberDays), 0);
+            
+            ViewPortfolio Portfolio = new ViewPortfolio();
+            MyDataGrid.ItemsSource = Portfolio.result;
 
             ViewCharts Chart = new ViewCharts();
-            Chart.createSerie();
+            Chart.createSerie(benchmarkIndex,"Cac40");
             lineChart.Series.Add(Chart.series.ElementAt(0));
 
         }
@@ -84,11 +93,16 @@ namespace Gestion_Indicielle
 
                 foreach (var v in al)
                 {
-                    result.Add(new { Name = v, IsInPortfolio = false });
+                    result.Add(new { Name = v, IsInPortfolio=false, Weight=0});
                 }
             
             return result;  
 
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            
         }
 
         

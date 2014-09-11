@@ -15,6 +15,8 @@ namespace Gestion_Indicielle.ViewModels
     {
 
         private double[,] matricePrice;
+        
+        private int numberDays;
         private ArrayList al;
         private List<LineSeries> _series;
         public List<LineSeries> series { get; set; }
@@ -23,10 +25,11 @@ namespace Gestion_Indicielle.ViewModels
 
         public ViewCharts()
         {
+            numberDays=5;
             DataRetriever dr = new DataRetriever();
             al = dr.getTickers();
             AverageHistoricYield ahy = new AverageHistoricYield();
-            matricePrice = ahy.getMatrixOfPrice(al, new DateTime(2012, 2, 3, 0, 0, 0), 5);
+            matricePrice = ahy.getMatrixOfPrice(al, new DateTime(2012, 2, 3, 0, 0, 0), numberDays);
             series = new List<LineSeries>();
         }
 
@@ -45,16 +48,16 @@ namespace Gestion_Indicielle.ViewModels
             series.Add(lineSeries1);
         }
 
-        public void createSerie()
+        public void createSerie(double[] newseries, String Title)
         {
             List<KeyValuePair<int, double>> valueList = new List<KeyValuePair<int, double>>();
 
-            for (int i = 0; i < matricePrice.GetLength(0); i++)
+            for (int i = 0; i < newseries.GetLength(0); i++)
             {
 
-                valueList.Insert(i, new KeyValuePair<int, double>(i + 1, matricePrice[i, 1]));
+                valueList.Insert(i, new KeyValuePair<int, double>(i + 1, newseries[i]));
             }
-            addSerieToChart((String)al[0], valueList);
+            addSerieToChart(Title, valueList);
         }
 
 

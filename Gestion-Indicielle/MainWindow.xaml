@@ -9,9 +9,21 @@
         <TabControl>
             <TabItem Header="Portfolio" HorizontalAlignment="Center" Height="Auto" VerticalAlignment="Center" Width="Auto" Margin="-2,-2,0,2">
                 <Grid Background="#FFE5E5E5">
-                    <DataGrid x:Name="MyDataGrid" VerticalAlignment="Top" HorizontalAlignment="Left" Width="500"  RowHeight="30" ColumnWidth="250" Height="350" >
-                        
-                    </DataGrid>    
+                    <DataGrid x:Name="MyDataGrid" VerticalAlignment="Top" AlternatingRowBackground="AliceBlue"   IsReadOnly="False" HorizontalAlignment="Left" Width="600"  RowHeight="30" ColumnWidth="200" Height="350" >
+
+                    </DataGrid>
+
+                    <TextBox  HorizontalAlignment="Left" Height="23" Margin="650,43,-16,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120" />
+                    <TextBlock  HorizontalAlignment="Left" Margin="650,27,-58,0" TextWrapping="Wrap" Text="Estimation window (in days)" VerticalAlignment="Top" RenderTransformOrigin="-0.82,-2.062"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="650,80,-118,0" TextWrapping="Wrap" Text="Time between 2 rebalances (in days)" VerticalAlignment="Top"/>
+                    <TextBox HorizontalAlignment="Left" Height="23" Margin="650,101,-16,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    
+                    <Button Content="Button" HorizontalAlignment="Left" Margin="650,330,0,0" VerticalAlignment="Top" Width="75"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="650,142,0,0" TextWrapping="Wrap" Text="Portfolio value (in EUR)" VerticalAlignment="Top" RenderTransformOrigin="0.49,0.437"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="650,163,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top"/>
+                    <Button Content="Start Program" HorizontalAlignment="Left" Margin="10,370,0,0" VerticalAlignment="Top" Width="74" Click="Button_Click"/>
+
+
                 </Grid>
             </TabItem>
             <TabItem Header="Numerical Data" HorizontalAlignment="Center" Height="Auto" VerticalAlignment="Center" Width="Auto" Margin="-2,-2,0,2">
