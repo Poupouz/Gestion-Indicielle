@@ -16,6 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using LibrarySQL;
 using Gestion_Indicielle.Models;
+using WallRiskEngine;
 
 namespace Gestion_Indicielle
 {
@@ -43,7 +44,7 @@ namespace Gestion_Indicielle
             Console.WriteLine(dr.nbDate());
             AverageHistoricYield ahy = new AverageHistoricYield();
 
-            double[,] matrice = ahy.getMatrixOfPrice(al, new DateTime(2012, 2, 3, 0, 0, 0), 5);
+            double[,] matrice = ahy.getMatrixOfPrice(al, new DateTime(2006, 1, 2, 0, 0, 0), 1000);
 
             double[,] returnsMatrix = ahy.getReturnsMatrix(matrice,1);
 
@@ -51,13 +52,7 @@ namespace Gestion_Indicielle
 
             double[,] covMatrix = ahy.getCovMatrix(returnsMatrix);
 
-            //Affichage du table
-            foreach (double d in meanReturns)
-            {
-                Console.WriteLine(d);
-            }
-
-            double[,] bench = dr.getDataBenchmark(new DateTime(2012, 2, 3, 0, 0, 0), 5);
+            double[,] bench = dr.getDataBenchmark(new DateTime(2006, 1, 2, 0, 0, 0), 1000);
             double[,] returnsBench = ahy.getReturnsMatrix(bench, 1);
 
             double[,] concatMat = ahy.concatMatrix(matrice,bench);
@@ -67,25 +62,17 @@ namespace Gestion_Indicielle
             double[]  covVectorExtract = ahy.extractCovReturnBench(covConcat,covConcat.GetLength(0) -1 );
             double varExtract = ahy.extractVarianceBench(covConcat,covConcat.GetLength(0) -1 );
 
-            Console.WriteLine("Matrice cov assets");
-            //Affichage de matrice
-            for (int i = 0; i < covMatrixExtract.GetLength(0); i++)
+
+            double[] coeff = API.OptimPortfolioWeight(covMatrixExtract, meanReturns, covVectorExtract, ahy.getMeanReturn(returnsBench)[0],0.000000001);
+            Console.WriteLine(coeff.GetLength(0));
+            double somme = 0.0;
+            for (int i = 0; i < coeff.GetLength(0); i++)
             {
-                for (int j = 0; j < covMatrixExtract.GetLength(1); j++)
-                {
-                    Console.Write(covMatrixExtract[i, j] + " ");
-                }
-                Console.WriteLine();
+                Console.WriteLine(coeff[i]);
+                somme += coeff[i];
             }
 
-            Console.WriteLine("Vecteur cov actif bench");
-            for (int i = 0; i < covVectorExtract.GetLength(0); i++)
-            {
-                Console.WriteLine(covVectorExtract[i]);
-            }
-
-            Console.WriteLine("Variance :");
-            Console.WriteLine(varExtract);
+            Console.WriteLine(somme);
 
                 /*-------------------------------------------------------*/
 
