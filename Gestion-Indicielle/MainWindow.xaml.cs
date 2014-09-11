@@ -16,6 +16,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using LibrarySQL;
 using Gestion_Indicielle.Models;
+using Gestion_Indicielle.ViewModels;
+using Microsoft.Windows.Controls;
+using System.Windows.Controls.DataVisualization.Charting;
 
 namespace Gestion_Indicielle
 {
@@ -28,6 +31,9 @@ namespace Gestion_Indicielle
         {
             InitializeComponent();
             MyDataGrid.ItemsSource = LoadCompanies();
+            ViewCharts Chart = new ViewCharts();
+            Chart.createSerie();
+            lineChart.Series.Add(Chart.series.ElementAt(0));
         }
 
         private List<Object> LoadCompanies()
@@ -38,7 +44,6 @@ namespace Gestion_Indicielle
 
             AverageHistoricYield ahy = new AverageHistoricYield();
             double[,] matrice = ahy.getMatrixOfPrice(al, new DateTime(2012, 2, 3, 0, 0, 0), 5);
-            
 
             foreach(var v in al)
             {
@@ -49,7 +54,7 @@ namespace Gestion_Indicielle
 
         }
 
-
+        
             
 
         
