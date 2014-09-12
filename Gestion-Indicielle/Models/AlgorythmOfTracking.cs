@@ -272,19 +272,19 @@ namespace Gestion_Indicielle.Models
                     //On est a une date de rebalancement donc
                     //Recalcul des poids pour la date voulu
                     weights = weightsComputation(i - EstimWindows);  //v2
-                    priceOfCurrentAssets = getPriceOfAssets(i-EstimWindows);
+                    priceOfCurrentAssets = getPriceOfAssets(i);
                     volumofCurrentAssets = getVolumeOfAssets(weights, priceOfCurrentAssets, CurrentCash);
                     //weights = weightsComputation(StartDate); //v1
                 }
 
                 //Récupère les prix sur le marché a la date courante
-                priceOfCurrentAssets = getPriceOfAssets(i - EstimWindows);
+                priceOfCurrentAssets = getPriceOfAssets(i);
 
                 //Calcul du volume present dans le pf a la date courante
                 //volumofCurrentAssets = getVolumeOfAssets(weights, priceOfCurrentAssets, CurrentCash);
 
                 //Calcul de la compo du pf a l indice de la date courante
-                double[] currentPortFolio = getPortFolio(volumofCurrentAssets, i - EstimWindows);
+                double[] currentPortFolio = getPortFolio(volumofCurrentAssets, i);
 
                 //Calcul de la valeur du pf actuel
                 double currentValuePf = getPricePf(currentPortFolio);
@@ -297,6 +297,18 @@ namespace Gestion_Indicielle.Models
             return res;
         }
        
+        //Fonction permettant de calculer la tracking error
+        public double computeTrackingError(double[] currentBench, double[] currentAssets)
+        {
+            double trackingError = 0;
+
+            if(currentBench.GetLength(0) != currentAssets.GetLength(0)){                
+                //for(int i)
+
+            }
+
+            return trackingError;
+        }
 
 
 
