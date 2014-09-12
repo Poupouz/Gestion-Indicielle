@@ -206,7 +206,7 @@ namespace Gestion_Indicielle.Models
             double[] covBenchWithAsset = Ahy.extractCovReturnBench(covMat, covMat.GetLength(0) - 1);
 
             //Calcul de poids optimaux
-            double[] optimWeights = API.OptimPortfolioWeight(covAssets,meanReturnEstimData,covBenchWithAsset,meanReturnBenchmark[0],0.0000000001);
+            double[] optimWeights = API.OptimPortfolioWeight(covAssets,meanReturnEstimData,covBenchWithAsset,meanReturnBenchmark[0],-0.00001);
 
             return optimWeights;
         }
@@ -238,36 +238,6 @@ namespace Gestion_Indicielle.Models
             return volumeOfAssets;
         }
 
-
-        //A appeler lors du rebalancement
-        /*public double[] getPortFolio(double[] volOfAssets, int indiceDateRebalancement){
-
-            double[] PortFolio = new double[volOfAssets.GetLength(0)];
-
-
-            double[] priceOfAssets = new double[volOfAssets.GetLength(0)];
-
-            //On recupere les prix sur le marché a la date de rebalancement
-            priceOfAssets = this.getPriceOfAssets(indiceDateRebalancement);
-
-            for (int i = 0; i < priceOfAssets.GetLength(0); i++)
-            {
-                PortFolio[i] = volOfAssets[i] * priceOfAssets[i] ;
-            }
-
-            return PortFolio;
-        }
-
-        public double getPricePf(double[] pf)
-        {
-            double sum = 0 ;
-            for (int i = 0; i < pf.GetLength(0); i++)
-            {
-                sum += pf[i];
-            }
-            return sum;
-        
-        }*/
 
         public double getPricePF2(double[] volOfAssets, int indiceDateRebalancement)
         {
