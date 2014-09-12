@@ -44,7 +44,7 @@ namespace Gestion_Indicielle
             Console.WriteLine(dr.nbDate());
             AverageHistoricYield ahy = new AverageHistoricYield();
 
-            double[,] matrice = ahy.getMatrixOfPrice(al, new DateTime(2006, 1, 2, 0, 0, 0), 1000);
+            double[,] matrice = ahy.getMatrixOfPrice(al, new DateTime(2006, 1, 2, 0, 0, 0), 100);
 
             double[,] returnsMatrix = ahy.getReturnsMatrix(matrice,1);
 
@@ -52,10 +52,10 @@ namespace Gestion_Indicielle
 
             double[,] covMatrix = ahy.getCovMatrix(returnsMatrix);
 
-            double[,] bench = dr.getDataBenchmark(new DateTime(2006, 1, 2, 0, 0, 0), 1000);
+            double[,] bench = dr.getDataBenchmark(new DateTime(2006, 1, 2, 0, 0, 0), 100);
             double[,] returnsBench = ahy.getReturnsMatrix(bench, 1);
 
-            double[,] concatMat = ahy.concatMatrix(matrice,bench);
+            double[,] concatMat = ahy.concatMatrix(returnsMatrix,returnsBench);
             double[,] covConcat = ahy.getCovMatrix(concatMat);
 
             double[,] covMatrixExtract = ahy.extractCovReturnAssets(covConcat,covConcat.GetLength(0)-1 );
