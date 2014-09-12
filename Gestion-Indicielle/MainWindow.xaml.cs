@@ -39,8 +39,7 @@ namespace Gestion_Indicielle
             DataRetriever dr = new DataRetriever();
             benchmarkIndex = dr.extractColumnIndex(dr.getDataBenchmark(new DateTime(2012, 2, 3, 0, 0, 0), numberDays), 0);
             
-            ViewPortfolio Portfolio = new ViewPortfolio();
-            MyDataGrid.ItemsSource = Portfolio.result;
+            
 
             ViewCharts Chart = new ViewCharts();
             Chart.createSerie(benchmarkIndex,"Cac40");
@@ -99,16 +98,6 @@ namespace Gestion_Indicielle
             return result;  
 
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
-        
-            
-
-        
 
     }
 }

@@ -8,23 +8,22 @@ using System.Threading.Tasks;
 
 namespace Gestion_Indicielle.ViewModels
 {
-    class ViewPortfolio
+    class PortfolioViewModel
     {
+        public List<ComponentInfo> ComponentInfoList { get; private set; }
         private ArrayList al;
-        private List<Object> _result;
-        public List<Object> result{get; set;} 
-        
-        public ViewPortfolio()
+
+        public PortfolioViewModel()
         {
+            ComponentInfoList = new List<ComponentInfo>();
             DataRetriever dr = new DataRetriever();
             al = dr.getTickers();
-            result = new List<Object>();
             foreach (var v in al)
             {
-                result.Add(new { Name = v, IsInPortfolio = false, Weight = 0 });
+                ComponentInfoList.Add(new ComponentInfo((string) v,false));
             }
+            
         }
-
 
     }
 }
