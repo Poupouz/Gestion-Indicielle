@@ -35,11 +35,6 @@ namespace Gestion_Indicielle.ViewModels
 
             portfolio = algo.tracking();
 
-            /*foreach (double d in portfolio)
-            {
-                Console.WriteLine(d);
-            }*/
-
             series = new List<LineSeries>();
         }
 
