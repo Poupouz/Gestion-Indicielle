@@ -66,10 +66,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Models\AverageHistoricYield.cs" />
+    <Compile Include="ViewModels\ComponentInfo.cs" />
+    <Compile Include="ViewModels\PortfolioViewModel.cs" />
     <Compile Include="ViewModels\ViewCharts.cs" />
-    <Compile Include="ViewModels\ViewPortfolio.cs" />
-    <Compile Include="View\ChoosePortfolio.xaml.cs">
-      <DependentUpon>ChoosePortfolio.xaml</DependentUpon>
+    <Compile Include="View\Portfolio.xaml.cs">
+      <DependentUpon>Portfolio.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -83,7 +84,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="View\ChoosePortfolio.xaml">
+    <Page Include="View\Portfolio.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

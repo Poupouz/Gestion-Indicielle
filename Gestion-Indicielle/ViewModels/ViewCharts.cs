@@ -18,7 +18,6 @@ namespace Gestion_Indicielle.ViewModels
         
         private int numberDays;
         private ArrayList al;
-        private List<LineSeries> _series;
         public List<LineSeries> series { get; set; }
 
         public ICommand DisplayCharts{get; set;}
