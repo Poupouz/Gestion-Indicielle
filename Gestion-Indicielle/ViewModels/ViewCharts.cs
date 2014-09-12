@@ -30,7 +30,7 @@ namespace Gestion_Indicielle.ViewModels
             al = dr.getTickers();
             AverageHistoricYield ahy = new AverageHistoricYield();
             matricePrice = ahy.getMatrixOfPrice(al, new DateTime(2012, 2, 3, 0, 0, 0), 5);
-            AlgorythmOfTracking algo = new AlgorythmOfTracking(al, 100.0, 300, 10);
+            AlgorythmOfTracking algo = new AlgorythmOfTracking(al, 100.0, 200, 20);
             //double[] coeff = algo.weightsComputation();
 
             portfolio = algo.tracking();

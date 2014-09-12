@@ -71,7 +71,9 @@ namespace Gestion_Indicielle.Models
 
             GlobalData = Ahy.getMatrixOfPrice(Tickers, StartDate, Ahy.DataRetriever.nbDate());
             GlobalBench = Ahy.DataRetriever.getDataBenchmark(StartDate, Ahy.DataRetriever.nbDate());
-            
+            //GlobalData = Ahy.getMatrixOfPrice(Tickers, StartDate, 600);
+            //GlobalBench = Ahy.DataRetriever.getDataBenchmark(StartDate, 600);
+
         }
 
         //Cash disponible au début de la simulation en euros
