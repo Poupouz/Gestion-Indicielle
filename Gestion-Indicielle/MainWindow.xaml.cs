@@ -16,6 +16,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using LibrarySQL;
 using Gestion_Indicielle.Models;
+using Gestion_Indicielle.ViewModels;
+using Microsoft.Windows.Controls;
+using System.Windows.Controls.DataVisualization.Charting;
 using WallRiskEngine;
 
 namespace Gestion_Indicielle
@@ -29,8 +32,11 @@ namespace Gestion_Indicielle
         {
             InitializeComponent();
             MyDataGrid.ItemsSource = LoadCompanies();
-            
-            
+
+            ViewCharts Chart = new ViewCharts();
+            Chart.createSerie();
+            lineChart.Series.Add(Chart.series.ElementAt(0));
+
         }
 
         private List<Object> LoadCompanies()
@@ -41,10 +47,11 @@ namespace Gestion_Indicielle
 
 
             /* ------ A ENLEVER POUR PLUS TARD ------ */
+
             //Console.WriteLine(dr.nbDate());
             
-           // AlgorythmOfTracking algo = new AlgorythmOfTracking(al, 1000.0, 1000, 1000);
-            //double[] coeff = algo.weightsComputation();
+            //AlgorythmOfTracking algo = new AlgorythmOfTracking(al, 1000.0, 1000, 1000);
+            ////double[] coeff = algo.weightsComputation();
 
             //ArrayList mesRes = algo.tracking();
 
@@ -75,7 +82,7 @@ namespace Gestion_Indicielle
 
         }
 
-
+        
             
 
         
