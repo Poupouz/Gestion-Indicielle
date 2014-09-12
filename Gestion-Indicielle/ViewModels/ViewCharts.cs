@@ -30,11 +30,36 @@ namespace Gestion_Indicielle.ViewModels
             al = dr.getTickers();
             AverageHistoricYield ahy = new AverageHistoricYield();
             matricePrice = ahy.getMatrixOfPrice(al, new DateTime(2012, 2, 3, 0, 0, 0), 5);
-            AlgorythmOfTracking algo = new AlgorythmOfTracking(al, 100.0, 200, 20);
+            AlgorythmOfTracking algo = new AlgorythmOfTracking(al, 100.0, 40, 1000);
             //double[] coeff = algo.weightsComputation();
 
             portfolio = algo.tracking();
 
+            double[,] bench = dr.getDataBenchmark(new DateTime(2006, 1, 2, 0, 0, 0), algo.NbDate);
+            double[,] benchBis = new double[bench.GetLength(0)-algo.EstimWindows,1];
+            for (int i = 0; i < benchBis.GetLength(0); i++)
+            {
+                benchBis[i,0] = bench[algo.EstimWindows,0];
+            }
+
+            double[,] returnBench = ahy.getReturnsMatrix(benchBis, 1);
+
+            double[,] currentReturnAssets = new double[returnBench.GetLength(0)+1, 1];
+            int cmp = 0;
+            foreach (double d in portfolio)
+            {
+                currentReturnAssets[cmp, 0] = d;
+                cmp++;
+            }
+
+            double[,] returnAssets = ahy.getReturnsMatrix(currentReturnAssets, 1);
+
+            
+            double trackingError = algo.computeTrackingError(returnBench, returnAssets);
+
+            Console.WriteLine("TRACKING ERROR");
+            Console.WriteLine(trackingError);
+            
             series = new List<LineSeries>();
         }
 
