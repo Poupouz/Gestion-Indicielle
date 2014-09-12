@@ -13,67 +13,33 @@ namespace Gestion_Indicielle.ViewModels
 {
     class ViewCharts
     {
-
-        private double[,] matricePrice;
-        //mini test
-        private ArrayList portfolio;
-
         private ArrayList al;
-        private List<LineSeries> _series;
-        public List<LineSeries> series { get; set; }
-
-        public ICommand DisplayCharts{get; set;}
 
         public ViewCharts()
         {
             DataRetriever dr = new DataRetriever();
             al = dr.getTickers();
             AverageHistoricYield ahy = new AverageHistoricYield();
-            matricePrice = ahy.getMatrixOfPrice(al, new DateTime(2012, 2, 3, 0, 0, 0), 5);
-            AlgorythmOfTracking algo = new AlgorythmOfTracking(al, 100.0, 300, 10);
-            //double[] coeff = algo.weightsComputation();
+        }
 
-            portfolio = algo.tracking();
+        public LineSeries createSerie(double[] newseries, String Title)
+        {
+            // Coordinate are given in an object like this :
+            // { x = 2.0, y = -3.0 }
 
-            /*foreach (double d in portfolio)
+            List<Object> valueList = new List<Object>();
+
+            for (int i = 0; i < newseries.GetLength(0); i++)
             {
-                Console.WriteLine(d);
-            }*/
-
-            series = new List<LineSeries>();
-        }
-
-        private void Run()
-        {
-            System.Windows.MessageBox.Show("aa");
-        }
-
-        private void addSerieToChart(String Title, List<KeyValuePair<int, double>> valueList)
-        {
+                valueList.Insert(i, new { x = i + 1, y = newseries[i] / newseries[0] * 100} );
+            }
+            
             LineSeries lineSeries1 = new LineSeries();
             lineSeries1.Title = Title;
-            lineSeries1.DependentValuePath = "Value";
-            lineSeries1.IndependentValuePath = "Key";
+            lineSeries1.DependentValuePath = "y";
+            lineSeries1.IndependentValuePath = "x";
             lineSeries1.ItemsSource = valueList;
-            series.Add(lineSeries1);
-        }
-
-        public void createSerie()
-        {
-            List<KeyValuePair<int, double>> valueList = new List<KeyValuePair<int, double>>();
-
-            //for (int i = 0; i < matricePrice.GetLength(0); i++)
-            //{
-
-            //    valueList.Insert(i, new KeyValuePair<int, double>(i + 1, matricePrice[i, 1]));
-            //}
-            int i = 0;
-            foreach (double d in portfolio)
-            {
-                valueList.Insert(i, new KeyValuePair<int, double>(i + 1, d));
-                i++;
-            }
-            addSerieToChart((String)al[0], valueList);
+            return lineSeries1;
         }
 
 

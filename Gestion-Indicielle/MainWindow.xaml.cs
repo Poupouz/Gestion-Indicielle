@@ -28,64 +28,87 @@ namespace Gestion_Indicielle
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        private double[] benchmarkIndex;
+        PortfolioViewModel p;
+        ArrayList tickers;
+        private const int MAX_DAY_WINDOW = 1998;
+
         public MainWindow()
         {
             InitializeComponent();
-            MyDataGrid.ItemsSource = LoadCompanies();
-
-            ViewCharts Chart = new ViewCharts();
-            Chart.createSerie();
-            lineChart.Series.Add(Chart.series.ElementAt(0));
-
+            p = new PortfolioViewModel();
+            this.DataContext = p;
         }
 
-        private List<Object> LoadCompanies()
+        /// <summary>
+        /// Get the CAC40 data for given numberOfDays and plot it into chart
+        /// </summary>
+        /// <param name="numberOfDays"></param>
+        private void displayCAC40Chart(ViewCharts chart, int numberOfDays)
         {
-            List<Object> result=new List<Object>();
             DataRetriever dr = new DataRetriever();
-            ArrayList al = dr.getTickers();
-
-
-            /* ------ A ENLEVER POUR PLUS TARD ------ */
-
-            //Console.WriteLine(dr.nbDate());
-            
-            //AlgorythmOfTracking algo = new AlgorythmOfTracking(al, 1000.0, 1000, 1000);
-            ////double[] coeff = algo.weightsComputation();
-
-            //ArrayList mesRes = algo.tracking();
-
-           //foreach (double d in mesRes)
-           // {
-           //     Console.WriteLine(d);
-           // }
-
-            /*double somme = 0.0;
-                for (int i = 0; i < coeff.GetLength(0); i++)
-                {
-                    Console.WriteLine(coeff[i]);
-                    somme += coeff[i];
-                }*/
-
-                //Console.WriteLine(somme);
-
-
-                /*-------------------------------------------------------*/
-
-
-                foreach (var v in al)
-                {
-                    result.Add(new { Name = v, IsInPortfolio = false });
-                }
-            
-            return result;  
-
+            benchmarkIndex = dr.extractColumnIndex(dr.getDataBenchmark(new DateTime(2006, 1, 2, 0, 0, 0), numberOfDays), 0);
+            lineChart.Series.Add(chart.createSerie(benchmarkIndex, "Cac40"));
         }
 
-        
-            
+        /// <summary>
+        /// Compute tracking and display data into the given chart
+        /// </summary>
+        /// <param name="chart"></param>
+        /// <param name="tickers"></param>
+        /// <param name="initCash"></param>
+        /// <param name="estimWindow"></param>
+        /// <param name="periodRebalance"></param>
+        private void displayTracking(ViewCharts chart, ArrayList tickers, int estimWindow, int periodRebalance)
+        {
+            AlgorythmOfTracking algoTracking = new AlgorythmOfTracking(tickers, 100, estimWindow, periodRebalance);
+            double[] trackingValues = (double[]) algoTracking.tracking().ToArray(typeof(double));
+            lineChart.Series.Add(chart.createSerie(trackingValues, "Tracking"));
+        }
 
-        
+        /// <summary>
+        /// Action when Launch Simulation Button is clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Launch_Simulation_Click(object sender, RoutedEventArgs e)
+        {
+            int estimationWindow;
+            int rebalanceWindow;
+            try
+            {
+                estimationWindow = int.Parse(EstimationWindowInput.Text);
+                rebalanceWindow = int.Parse(RebalanceWindowInput.Text);
+            }
+            catch (System.FormatException exception)
+            {
+                System.Windows.MessageBox.Show(exception.Message);
+                return;
+            }
 
+            tickers = new ArrayList(p.ComponentInfoList
+                .Where(x => x.IsSelected)
+                .Select(y => PortfolioViewModel.hashtableCompanies[y.Tickers]).ToArray());
+
+            if (rebalanceWindow > MAX_DAY_WINDOW)
+            {
+                System.Windows.MessageBox.Show("Estimation window must be lower than " + MAX_DAY_WINDOW);
+                return;
+            }
+
+            if (estimationWindow <= tickers.Count)
+            {
+                System.Windows.MessageBox.Show("Estimation window must be greater than the number of companies selected");
+                return;
+            }
+
+            ViewCharts chart = new ViewCharts();
+            lineChart.Series.RemoveAt(0);
+            displayCAC40Chart(chart, estimationWindow);
+
+            displayTracking(chart, tickers, estimationWindow, rebalanceWindow);
+
+        }
     }
 }

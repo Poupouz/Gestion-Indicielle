@@ -72,5 +72,19 @@ namespace LibrarySQL
             }
         }
 
+        public double[] extractColumnIndex(double[,] table, int index)
+        {
+            double[] ret=new double[table.GetLength(0)];
+            
+            Parallel.For(0, table.GetLength(0), i => ret[i] = table[i, index]);
+            return ret;
+        }
+
+        public double[] extractRowIndex(double[,] table, int index)
+        {
+            double[] ret = new double[table.GetLength(1)];
+            Parallel.For(0, table.GetLength(1), i => ret[i] = table[index, i]);
+            return ret;
+        }
     }
 }
