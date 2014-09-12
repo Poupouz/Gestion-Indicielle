@@ -38,9 +38,7 @@ namespace Gestion_Indicielle
             numberDays = 100;
             DataRetriever dr = new DataRetriever();
             benchmarkIndex = dr.extractColumnIndex(dr.getDataBenchmark(new DateTime(2012, 2, 3, 0, 0, 0), numberDays), 0);
-            
-            
-
+            this.DataContext = new PortfolioViewModel();
             ViewCharts Chart = new ViewCharts();
             Chart.createSerie(benchmarkIndex,"Cac40");
             lineChart.Series.Add(Chart.series.ElementAt(0));
