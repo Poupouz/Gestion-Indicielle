@@ -5,15 +5,17 @@
         xmlns:toolkit="http://schemas.microsoft.com/wpf/2008/toolkit"
         Title="MainWindow" Height="Auto" Width="Auto">
     <Grid>
-        
-             <ListBox ItemsSource="{Binding ComponentInfoList}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <CheckBox Content="{Binding Tickers}" 
-                  IsChecked="{Binding IsSelected, Mode=TwoWay}"/>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+            <WrapPanel>
+                <ListBox ItemsSource="{Binding ComponentInfoList}" Padding="10,10,10,10">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Content="{Binding Tickers}" 
+                      IsChecked="{Binding IsSelected, Mode=TwoWay}"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </WrapPanel>
+             
 
             <TextBox  HorizontalAlignment="Left" Height="23" Margin="650,43,-16,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120" />
             <TextBlock  HorizontalAlignment="Left" Margin="650,27,-58,0" TextWrapping="Wrap" Text="Estimation window (in days)" VerticalAlignment="Top" RenderTransformOrigin="-0.82,-2.062"/>
