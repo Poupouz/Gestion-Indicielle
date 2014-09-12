@@ -56,6 +56,22 @@ namespace Gestion_Indicielle.Models
             set { globalBench = value; }
         }
 
+        //Attribut de tracking error
+        private double trackingError;
+
+        public double TrackingError
+        {
+            get { return trackingError; }
+            set { trackingError = value; }
+        }
+
+        private int nbDate;
+
+        public int NbDate
+        {
+            get { return nbDate; }
+            set { nbDate = value; }
+        }
 
 
         public AlgorythmOfTracking(ArrayList tickers, double initCash, int estimWin, int periodRebalance)
@@ -67,10 +83,14 @@ namespace Gestion_Indicielle.Models
             Ahy = new AverageHistoricYield();
             StartDate = new DateTime(2006, 1, 2, 0, 0, 0);
             HistPricePortFolio = new ArrayList();
-            EndDate = new DateTime(2013, 9, 3, 0, 0, 0);
+            EndDate = new DateTime(2008, 9, 3, 0, 0, 0);
+            int ecartJour = EndDate.Subtract(StartDate).Days;
+            NbDate = Ahy.DataRetriever.nbDate();
+            GlobalData = Ahy.getMatrixOfPrice(Tickers, StartDate, NbDate);
+            GlobalBench = Ahy.DataRetriever.getDataBenchmark(StartDate, NbDate);
 
-            GlobalData = Ahy.getMatrixOfPrice(Tickers, StartDate, Ahy.DataRetriever.nbDate());
-            GlobalBench = Ahy.DataRetriever.getDataBenchmark(StartDate, Ahy.DataRetriever.nbDate());
+            //GlobalData = Ahy.getMatrixOfPrice(Tickers, StartDate, ecartJour);
+           // GlobalBench = Ahy.DataRetriever.getDataBenchmark(StartDate, ecartJour);
             
         }
 
@@ -143,7 +163,7 @@ namespace Gestion_Indicielle.Models
 
         }
 
-
+        //Permet d extraire la sous matrice correspondante a l indice de la date voulue
         public double[,] extractSubMatrixOfGlobalBench(int indiceDeDebutExtract)
         {
             double[,] extract = new double[EstimWindows, 1];
@@ -161,19 +181,17 @@ namespace Gestion_Indicielle.Models
 
         //Algo de rebalancement qui permet de renvoyer le tracker
         public double[] weightsComputation(int indiceDeDebut) //v2
-        //public double[] weightsComputation(DateTime dateRebalance) //v1
         {
             //Recuperation des résultats obtenus
-            //double[,] estimatedData = Ahy.getMatrixOfPrice(Tickers, dateRebalance ,EstimWindows); //v1
             double[,] estimatedData = this.extractSubMatrixOfGlobalData(indiceDeDebut); //v2
             double[,] returnsEstimData = Ahy.getReturnsMatrix(estimatedData,1);
             //Calcul des rentabilité moyenne des données estimé
             double[] meanReturnEstimData = Ahy.getMeanReturn(returnsEstimData);
 
             //Recuperation de la Benchmark
-            //double[,] benchMark = Ahy.DataRetriever.getDataBenchmark(dateRebalance, EstimWindows) ; //v1
             double[,] benchMark = this.extractSubMatrixOfGlobalBench(indiceDeDebut); // v2
             double[,] returnsBenchmark = Ahy.getReturnsMatrix(benchMark,1);
+
             //Calcul de la rentabilité moyenne de la benchmark
             double[] meanReturnBenchmark = Ahy.getMeanReturn(returnsBenchmark);
 
@@ -186,7 +204,6 @@ namespace Gestion_Indicielle.Models
             //Extraction des données
             double[,] covAssets = Ahy.extractCovReturnAssets(covMat , covMat.GetLength(0) - 1) ;
             double[] covBenchWithAsset = Ahy.extractCovReturnBench(covMat, covMat.GetLength(0) - 1);
-            //double varBench = Ahy.extractVarianceBench(covMat , covMat.GetLength(0) - 1);
 
             //Calcul de poids optimaux
             double[] optimWeights = API.OptimPortfolioWeight(covAssets,meanReturnEstimData,covBenchWithAsset,meanReturnBenchmark[0],0.0000000001);
@@ -223,17 +240,12 @@ namespace Gestion_Indicielle.Models
 
 
         //A appeler lors du rebalancement
-        public double[] getPortFolio(double[] volOfAssets, int indiceDateRebalancement){
+        /*public double[] getPortFolio(double[] volOfAssets, int indiceDateRebalancement){
 
             double[] PortFolio = new double[volOfAssets.GetLength(0)];
 
 
             double[] priceOfAssets = new double[volOfAssets.GetLength(0)];
-
-            /*for (int i = 0; i < priceOfAssetsNextDay.GetLength(0); i++)
-            {
-                priceOfAssetsNextDay[i] = GlobalData[EstimWindows+1, i];
-            }*/
 
             //On recupere les prix sur le marché a la date de rebalancement
             priceOfAssets = this.getPriceOfAssets(indiceDateRebalancement);
@@ -255,18 +267,42 @@ namespace Gestion_Indicielle.Models
             }
             return sum;
         
+        }*/
+
+        public double getPricePF2(double[] volOfAssets, int indiceDateRebalancement)
+        {
+            double[] portFolio = new double[volOfAssets.GetLength(0)];
+
+            double[] priceOfAssets = new double[volOfAssets.GetLength(0)];
+
+            //On recupere les prix sur le marché a la date de rebalancement
+            priceOfAssets = this.getPriceOfAssets(indiceDateRebalancement);
+
+            for (int i = 0; i < priceOfAssets.GetLength(0); i++)
+            {
+                portFolio[i] = volOfAssets[i] * priceOfAssets[i];
+            }
+
+            double sum = 0;
+            for (int i = 0; i < portFolio.GetLength(0); i++)
+            {
+                sum += portFolio[i];
+            }
+            return sum;
+        
         }
 
         public ArrayList tracking()
         {
             ArrayList res = new ArrayList();
+
+
             double CurrentCash = InitialCash;
-           // double[] weights = weightsComputation(StartDate) ; //v1
             double[] weights = weightsComputation(0); //v2
             double[] priceOfCurrentAssets = getPriceOfAssets(0);
             double[] volumofCurrentAssets = getVolumeOfAssets(weights, priceOfCurrentAssets, CurrentCash);
     
-            for (int i = EstimWindows; i < Ahy.DataRetriever.nbDate(); i++)
+            for (int i = EstimWindows; i < NbDate; i++)
             {
                 if( (i - EstimWindows) % PeriodOfRebalance == 0){
                     //On est a une date de rebalancement donc
@@ -274,20 +310,13 @@ namespace Gestion_Indicielle.Models
                     weights = weightsComputation(i - EstimWindows);  //v2
                     priceOfCurrentAssets = getPriceOfAssets(i);
                     volumofCurrentAssets = getVolumeOfAssets(weights, priceOfCurrentAssets, CurrentCash);
-                    //weights = weightsComputation(StartDate); //v1
                 }
 
                 //Récupère les prix sur le marché a la date courante
                 priceOfCurrentAssets = getPriceOfAssets(i);
 
-                //Calcul du volume present dans le pf a la date courante
-                //volumofCurrentAssets = getVolumeOfAssets(weights, priceOfCurrentAssets, CurrentCash);
-
-                //Calcul de la compo du pf a l indice de la date courante
-                double[] currentPortFolio = getPortFolio(volumofCurrentAssets, i);
-
                 //Calcul de la valeur du pf actuel
-                double currentValuePf = getPricePf(currentPortFolio);
+                double currentValuePf = getPricePF2(volumofCurrentAssets, i);
                 CurrentCash = currentValuePf;
 
                 //On ajoute la valeur du pf pour une periode de rebalancement
@@ -298,12 +327,40 @@ namespace Gestion_Indicielle.Models
         }
        
         //Fonction permettant de calculer la tracking error
-        public double computeTrackingError(double[] currentBench, double[] currentAssets)
+        public double computeTrackingError(double[,] currentReturnBench, double[,] currentReturnAssets)
         {
-            double trackingError = 0;
 
-            if(currentBench.GetLength(0) != currentAssets.GetLength(0)){                
-                //for(int i)
+            double trackingError = 0;
+            double[] deltaReturn = new double[currentReturnAssets.GetLength(0)];
+
+            //Si on a 2 vecteurs de taille différentes
+            if(currentReturnBench.GetLength(0) == currentReturnAssets.GetLength(0)){
+                for (int i = 0; i < currentReturnAssets.GetLength(0); i++)
+                {
+                    deltaReturn[i] = currentReturnAssets[i,0] -  currentReturnBench[i,0];
+                }
+                //Calcul de variance
+                double moyDelta = 0;
+
+                //Calcul de la moyenne
+                for (int i = 0; i < currentReturnAssets.GetLength(0); i++)
+                {
+                    moyDelta += deltaReturn[i];
+                }
+                moyDelta = moyDelta / deltaReturn.GetLength(0);
+
+                //Initialisation et calcul de la variance des ecarts de rentabilité
+                double variance = 0.0;
+
+                for (int i = 0; i < deltaReturn.GetLength(0); i++)
+                {
+                    variance += (moyDelta - deltaReturn[i]) * (moyDelta - deltaReturn[i]);
+                }
+
+                variance = variance / deltaReturn.GetLength(0);
+
+
+                trackingError = System.Math.Sqrt(variance);
 
             }
 
