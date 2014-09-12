@@ -1,6 +1,9 @@
-﻿<Window x:Class="Gestion_Indicielle.MainWindow"
+﻿<Window xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"  
+        x:Class="Gestion_Indicielle.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:toolkit="http://schemas.microsoft.com/wpf/2008/toolkit"
+        
         Title="MainWindow" Height="Auto" Width="Auto">
     <Grid>
         <TabControl>
@@ -18,7 +21,9 @@
             </TabItem>
             <TabItem Header="Graphical Data" HorizontalAlignment="Center" Height="Auto" VerticalAlignment="Center" Width="Auto" Margin="-2,-2,0,2">
                 <Grid Background="#FFE5E5E5">
-                    
+                    <chartingToolkit:Chart  Name="lineChart">
+                        <chartingToolkit:LineSeries ItemsSource="{Binding Path=DisplayCharts}"/>
+                    </chartingToolkit:Chart >
                 </Grid>
             </TabItem>
         </TabControl>
