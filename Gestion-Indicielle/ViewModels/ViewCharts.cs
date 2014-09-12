@@ -13,28 +13,16 @@ namespace Gestion_Indicielle.ViewModels
 {
     class ViewCharts
     {
-
-        private double[,] matricePrice;
-        
-        private int numberDays;
         private ArrayList al;
         public List<LineSeries> series { get; set; }
 
-        public ICommand DisplayCharts{get; set;}
-
         public ViewCharts()
         {
-            numberDays=5;
+           
             DataRetriever dr = new DataRetriever();
             al = dr.getTickers();
             AverageHistoricYield ahy = new AverageHistoricYield();
-            matricePrice = ahy.getMatrixOfPrice(al, new DateTime(2012, 2, 3, 0, 0, 0), numberDays);
             series = new List<LineSeries>();
-        }
-
-        private void Run()
-        {
-            System.Windows.MessageBox.Show("aa");
         }
 
         private void addSerieToChart(String Title, List<KeyValuePair<int, double>> valueList)
@@ -54,7 +42,7 @@ namespace Gestion_Indicielle.ViewModels
             for (int i = 0; i < newseries.GetLength(0); i++)
             {
 
-                valueList.Insert(i, new KeyValuePair<int, double>(i + 1, newseries[i]));
+                valueList.Insert(i, new KeyValuePair<int, double>(i + 1, newseries[i]/newseries[0]*100));
             }
             addSerieToChart(Title, valueList);
         }

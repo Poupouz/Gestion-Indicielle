@@ -4,7 +4,7 @@
         xmlns:toolkit="http://schemas.microsoft.com/wpf/2008/toolkit"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"  
         x:Class="Gestion_Indicielle.MainWindow"
-        Title="MainWindow" WindowState="Maximized" d:DesignWidth="1203.821" d:DesignHeight="657.388">
+        Title="Gestion Indicielle" WindowState="Maximized">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />
@@ -36,7 +36,12 @@
         <WrapPanel Grid.Column="2" Margin="10,10,10,10">
             <chartingToolkit:Chart  x:Name="lineChart" BorderThickness="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="560" Width="829">
                 <chartingToolkit:LineSeries>
-                </chartingToolkit:LineSeries>
+                    <chartingToolkit:LineSeries.DataPointStyle>
+                        <Style TargetType="chartingToolkit:LineDataPoint">
+                            <Setter Property="Opacity" Value="0" />
+                        </Style>
+                    </chartingToolkit:LineSeries.DataPointStyle>
+                </chartingToolkit:LineSeries> 
             </chartingToolkit:Chart>
         </WrapPanel>
     </Grid>

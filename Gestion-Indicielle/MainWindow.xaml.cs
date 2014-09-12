@@ -31,18 +31,28 @@ namespace Gestion_Indicielle
 
         private double[] benchmarkIndex;
         private int numberDays;
+        PortfolioViewModel p;
+        ArrayList tickers;
 
         public MainWindow()
         {
             InitializeComponent();
-            numberDays = 100;
+            numberDays = 1998;
             DataRetriever dr = new DataRetriever();
-            benchmarkIndex = dr.extractColumnIndex(dr.getDataBenchmark(new DateTime(2012, 2, 3, 0, 0, 0), numberDays), 0);
-            this.DataContext = new PortfolioViewModel();
+            benchmarkIndex = dr.extractColumnIndex(dr.getDataBenchmark(new DateTime(2006, 1, 2, 0, 0, 0), numberDays), 0);
+            p = new PortfolioViewModel();
+            this.DataContext = p;
+            
             ViewCharts Chart = new ViewCharts();
             Chart.createSerie(benchmarkIndex,"Cac40");
             lineChart.Series.RemoveAt(0);
             lineChart.Series.Add(Chart.series.ElementAt(0));
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            tickers = new ArrayList(p.ComponentInfoList.Where(x => x.IsSelected).ToArray());
+        }
+
     }
 }
