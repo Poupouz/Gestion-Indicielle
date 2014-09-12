@@ -33,12 +33,21 @@ namespace Gestion_Indicielle
         PortfolioViewModel p;
         ArrayList tickers;
         private const int MAX_DAY_WINDOW = 1998;
+        private Random random = new Random();
 
         public MainWindow()
         {
             InitializeComponent();
             p = new PortfolioViewModel();
             this.DataContext = p;
+        }
+
+        private void addChartWithoutDots(ViewCharts chart, LineSeries series, Style dataPointStyle)
+        {
+            if (dataPointStyle == null)
+                dataPointStyle = GetNewDataPointStyle();
+            series.DataPointStyle = dataPointStyle;
+            lineChart.Series.Add(series);
         }
 
         /// <summary>
@@ -54,7 +63,7 @@ namespace Gestion_Indicielle
             {
                 benchmarkIndex[i] = tmp[i + int.Parse(EstimationWindowInput.Text)];
             }
-            lineChart.Series.Add(chart.createSerie(benchmarkIndex, "Cac40"));
+            addChartWithoutDots(chart, chart.createSerie(benchmarkIndex, "Cac40"),  CACStyle());
         }
 
         /// <summary>
@@ -69,7 +78,7 @@ namespace Gestion_Indicielle
         {
             AlgorythmOfTracking algoTracking = new AlgorythmOfTracking(tickers, 100, estimWindow, periodRebalance);
             double[] trackingValues = (double[]) algoTracking.tracking().ToArray(typeof(double));
-            lineChart.Series.Add(chart.createSerie(trackingValues, "Tracking"));
+            addChartWithoutDots(chart, chart.createSerie(trackingValues, "Tracking"), null);
         }
 
         /// <summary>
@@ -113,7 +122,49 @@ namespace Gestion_Indicielle
             displayCAC40Chart(chart, MAX_DAY_WINDOW);
 
             displayTracking(chart, tickers, estimationWindow, rebalanceWindow);
+        }
 
+        /// <summary>
+        /// <summary>
+        /// Gets the new data point style.
+        /// </summary>
+        /// <returns></returns>
+        private Style GetNewDataPointStyle()
+        {
+            Color background = Color.FromRgb((byte)this.random.Next(100),
+                                             (byte)this.random.Next(100),
+                                             (byte)this.random.Next(100));
+            Style style = new Style(typeof(DataPoint));
+            Setter st1 = new Setter(DataPoint.BackgroundProperty,
+                                        new SolidColorBrush(background));
+            Setter st2 = new Setter(DataPoint.BorderBrushProperty,
+                                        new SolidColorBrush(Colors.White));
+            Setter st3 = new Setter(DataPoint.BorderThicknessProperty, new Thickness(0.1));
+
+            Setter st4 = new Setter(DataPoint.TemplateProperty, null);
+            style.Setters.Add(st1);
+            style.Setters.Add(st2);
+            style.Setters.Add(st3);
+            style.Setters.Add(st4);
+            return style;
+        }
+
+        private Style CACStyle()
+        {
+            Color background = Colors.Crimson;
+            Style style = new Style(typeof(DataPoint));
+            Setter st1 = new Setter(DataPoint.BackgroundProperty,
+                                        new SolidColorBrush(background));
+            Setter st2 = new Setter(DataPoint.BorderBrushProperty,
+                                        new SolidColorBrush(Colors.White));
+            Setter st3 = new Setter(DataPoint.BorderThicknessProperty, new Thickness(0.1));
+
+            Setter st4 = new Setter(DataPoint.TemplateProperty, null);
+            style.Setters.Add(st1);
+            style.Setters.Add(st2);
+            style.Setters.Add(st3);
+            style.Setters.Add(st4);
+            return style;
         }
     }
 }
