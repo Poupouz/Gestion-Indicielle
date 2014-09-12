@@ -35,6 +35,26 @@ namespace Gestion_Indicielle.ViewModels
 
             portfolio = algo.tracking();
 
+            /*double[,] bench = dr.getDataBenchmark(new DateTime(2007, 2, 26, 0, 0, 0), 600);
+
+            double[,] returnBench = ahy.getReturnsMatrix(bench, 1);
+
+            double[,] currentReturnAssets = new double[returnBench.GetLength(0)+1, 1];
+            int cmp = 0;
+            foreach (double d in portfolio)
+            {
+                currentReturnAssets[cmp, 0] = d;
+                cmp++;
+            }
+
+            double[,] returnAssets = ahy.getReturnsMatrix(currentReturnAssets, 1);
+
+            double trackingError = algo.computeTrackingError(returnBench, returnAssets);
+
+            Console.WriteLine("TRACKING ERROR");
+            Console.WriteLine(trackingError);*/
+            
+
             /*foreach (double d in portfolio)
             {
                 Console.WriteLine(d);
