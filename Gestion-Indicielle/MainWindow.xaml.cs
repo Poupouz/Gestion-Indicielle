@@ -48,7 +48,12 @@ namespace Gestion_Indicielle
         private void displayCAC40Chart(ViewCharts chart, int numberOfDays)
         {
             DataRetriever dr = new DataRetriever();
-            benchmarkIndex = dr.extractColumnIndex(dr.getDataBenchmark(new DateTime(2006, 1, 2, 0, 0, 0), numberOfDays), 0);
+            double[] tmp = dr.extractColumnIndex(dr.getDataBenchmark(new DateTime(2006, 1, 2, 0, 0, 0), numberOfDays), 0);
+            benchmarkIndex = new double[tmp.GetLength(0)-int.Parse(EstimationWindowInput.Text)];
+            for (int i = 0; i < benchmarkIndex.GetLength(0); i++)
+            {
+                benchmarkIndex[i] = tmp[i + int.Parse(EstimationWindowInput.Text)];
+            }
             lineChart.Series.Add(chart.createSerie(benchmarkIndex, "Cac40"));
         }
 
@@ -105,7 +110,7 @@ namespace Gestion_Indicielle
 
             ViewCharts chart = new ViewCharts();
             lineChart.Series.RemoveAt(0);
-            displayCAC40Chart(chart, estimationWindow);
+            displayCAC40Chart(chart, MAX_DAY_WINDOW);
 
             displayTracking(chart, tickers, estimationWindow, rebalanceWindow);
 
