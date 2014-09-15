@@ -54,7 +54,12 @@
             <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Style="{StaticResource SubHeaderTextBlockStyle}" Foreground="#FFBABABA"/>
             <Button Content="Launch Simulation" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,10,0,5" Click="Launch_Simulation_Click"/>
             <Button Content="Cancel Simulation" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,10,0,5" Click="Cancel_Simulation_Click"/>
-            <ProgressBar x:Name="ProgressBar" Margin="10" Height="15" />
+            <ProgressBar x:Name="ProgressBar" Margin="10, 10, 10, 30" Height="15" />
+            <Separator />
+            <TextBlock  HorizontalAlignment="Left" TextWrapping="Wrap" Margin="0, 30, 0, 0" Text="Tracking Error" VerticalAlignment="Top" Style="{StaticResource SubHeaderTextBlockStyle}"/>
+            <TextBlock x:Name="TrackingErrorOutput" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Style="{StaticResource SubHeaderTextBlockStyle}" Foreground="#FFBABABA"/>
+            <TextBlock  HorizontalAlignment="Left" TextWrapping="Wrap" Text="Information Ratio" VerticalAlignment="Top" Style="{StaticResource SubHeaderTextBlockStyle}"/>
+            <TextBlock x:Name="InformationRatioOutput" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Style="{StaticResource SubHeaderTextBlockStyle}" Foreground="#FFBABABA"/>
 
 
         </StackPanel>

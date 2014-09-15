@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.DataVisualization.Charting;
 using System.Windows.Media;
+using WallRiskEngine;
 
 namespace Gestion_Indicielle
 {
@@ -17,8 +18,10 @@ namespace Gestion_Indicielle
     /// </summary>
     public partial class MainWindow : Window
     {
-
         private double[] benchmarkIndex;
+        private double[] trackingValues;
+        private double trackingError;
+        private double informationRatio;
         PortfolioViewModel p;
         ArrayList tickers;
         private const int MAX_DAY_WINDOW = 1998;
@@ -40,7 +43,6 @@ namespace Gestion_Indicielle
             bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_RunWorkerCompleted);
             bw.ProgressChanged += new ProgressChangedEventHandler(bw_ProgressChanged);
         }
-
         private void addChartWithoutDots(ViewCharts chart, LineSeries series, Style dataPointStyle)
         {
             if (dataPointStyle == null)
@@ -48,7 +50,6 @@ namespace Gestion_Indicielle
             series.DataPointStyle = dataPointStyle;
             lineChart.Series.Add(series);
         }
-
         /// <summary>
         /// Get the CAC40 data for given numberOfDays and plot it into chart
         /// </summary>
@@ -62,8 +63,30 @@ namespace Gestion_Indicielle
             {
                 benchmarkIndex[i] = tmp[i + estimationWindow];
             }
-            addChartWithoutDots(chart, chart.createSerie(benchmarkIndex, "Cac40"),  CACStyle());
+            addChartWithoutDots(chart, chart.createSerie(benchmarkIndex, "Cac40"), CACStyle());
         }
+
+        /// <summary>
+        /// Get the tracking error from the bench extract and the portfolio values
+        /// </summary>
+        /// <param name="algo"></param>
+        private void getIndicator(AlgorythmOfTracking algo)
+        {
+            if (benchmarkIndex.GetLength(0) == trackingValues.GetLength(0))
+            {
+                double[,] matData = new double[benchmarkIndex.GetLength(0), 2];
+                for (int i = 0; i < matData.GetLength(0); i++)
+                {
+                    matData[i, 0] = trackingValues[i];
+                    matData[i, 1] = benchmarkIndex[i];
+                }
+                AverageHistoricYield ahy = new AverageHistoricYield();
+                trackingError = algo.computeTrackingError(ahy.getReturnsMatrix(matData,1));
+                informationRatio = algo.computeInformationRation(ahy.getReturnsMatrix(matData, 1), trackingError);
+
+            }
+        }
+
 
         /// <summary>
         /// Compute tracking and display data into the given chart
@@ -76,8 +99,11 @@ namespace Gestion_Indicielle
         private void displayTracking(ViewCharts chart, ArrayList tickers, int estimWindow, int periodRebalance)
         {
             AlgorythmOfTracking algoTracking = new AlgorythmOfTracking(tickers, 100, estimWindow, periodRebalance);
-            double[] trackingValues = (double[]) algoTracking.tracking().ToArray(typeof(double));
+            trackingValues = (double[])algoTracking.tracking().ToArray(typeof(double));
             addChartWithoutDots(chart, chart.createSerie(trackingValues, "Tracking"), null);
+            this.getIndicator(algoTracking);
+            TrackingErrorOutput.Text = (trackingError*100).ToString("F")+" %";
+            InformationRatioOutput.Text = (informationRatio * 100).ToString("F") + " %";
         }
 
         private class LaunchArguments
@@ -142,17 +168,14 @@ namespace Gestion_Indicielle
                 System.Windows.MessageBox.Show(exception.Message);
                 return;
             }
-
             tickers = new ArrayList(p.ComponentInfoList
-                .Where(x => x.IsSelected)
-                .Select(y => PortfolioViewModel.hashtableCompanies[y.Tickers]).ToArray());
-
+            .Where(x => x.IsSelected)
+            .Select(y => PortfolioViewModel.hashtableCompanies[y.Tickers]).ToArray());
             if (rebalanceWindow > MAX_DAY_WINDOW)
             {
                 System.Windows.MessageBox.Show("Estimation window must be lower than " + MAX_DAY_WINDOW);
                 return;
             }
-
             if (estimationWindow <= tickers.Count)
             {
                 System.Windows.MessageBox.Show("Estimation window must be greater than the number of companies selected");
@@ -173,7 +196,6 @@ namespace Gestion_Indicielle
         {
             displayCAC40Chart(chart, MAX_DAY_WINDOW, estimationWindow);
             worker.ReportProgress(30);
-
             displayTracking(chart, tickers, estimationWindow, rebalanceWindow);
             worker.ReportProgress(50);
         }
@@ -195,7 +217,6 @@ namespace Gestion_Indicielle
         {
 
         }
-        
 
         /// <summary>
         /// <summary>
@@ -204,16 +225,15 @@ namespace Gestion_Indicielle
         /// <returns></returns>
         private Style GetNewDataPointStyle()
         {
-            Color background = Color.FromRgb((byte)this.random.Next(150),
-                                             (byte)this.random.Next(150),
-                                             (byte)this.random.Next(150));
+            Color background = Color.FromRgb((byte)this.random.Next(100),
+            (byte)this.random.Next(100),
+            (byte)this.random.Next(100));
             Style style = new Style(typeof(DataPoint));
             Setter st1 = new Setter(DataPoint.BackgroundProperty,
-                                        new SolidColorBrush(background));
+            new SolidColorBrush(background));
             Setter st2 = new Setter(DataPoint.BorderBrushProperty,
-                                        new SolidColorBrush(Colors.White));
+            new SolidColorBrush(Colors.White));
             Setter st3 = new Setter(DataPoint.BorderThicknessProperty, new Thickness(0.1));
-
             Setter st4 = new Setter(DataPoint.TemplateProperty, null);
             style.Setters.Add(st1);
             style.Setters.Add(st2);
@@ -221,17 +241,15 @@ namespace Gestion_Indicielle
             style.Setters.Add(st4);
             return style;
         }
-
         private Style CACStyle()
         {
             Color background = Colors.Crimson;
             Style style = new Style(typeof(DataPoint));
             Setter st1 = new Setter(DataPoint.BackgroundProperty,
-                                        new SolidColorBrush(background));
+            new SolidColorBrush(background));
             Setter st2 = new Setter(DataPoint.BorderBrushProperty,
-                                        new SolidColorBrush(Colors.White));
+            new SolidColorBrush(Colors.White));
             Setter st3 = new Setter(DataPoint.BorderThicknessProperty, new Thickness(0.1));
-
             Setter st4 = new Setter(DataPoint.TemplateProperty, null);
             style.Setters.Add(st1);
             style.Setters.Add(st2);
