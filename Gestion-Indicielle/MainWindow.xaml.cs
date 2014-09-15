@@ -28,6 +28,7 @@ namespace Gestion_Indicielle
         private const int MAX_DAY_WINDOW = 1998;
         private Random random = new Random();
         private BackgroundWorker bw;
+        private DateTime[] dates;
 
         private int previousEstimationWindow = -1;
 
@@ -66,7 +67,8 @@ namespace Gestion_Indicielle
             {
                 benchmarkIndex[i] = tmp[i + estimationWindow];
             }
-            addChartWithoutDots(chart, chart.createSerie(benchmarkIndex, "Cac40"), CACStyle());
+            dates = dr.getDataDates(new DateTime(2006, 1, 2, 0, 0, 0), numberOfDays);
+            addChartWithoutDots(chart, chart.createSerie(benchmarkIndex, dates, "Cac40"), CACStyle());
         }
 
         /// <summary>
@@ -102,7 +104,7 @@ namespace Gestion_Indicielle
         {
             AlgorythmOfTracking algoTracking = new AlgorythmOfTracking(tickers, 100, estimWindow, periodRebalance, targetPerformance);
             trackingValues = (double[])algoTracking.tracking().ToArray(typeof(double));
-            addChartWithoutDots(chart, chart.createSerie(trackingValues, "Tracking_" + estimWindow + '_' + periodRebalance + '_' + targetPerformance * 10000 + '_' + lineChart.Series.Count), null);
+            addChartWithoutDots(chart, chart.createSerie(trackingValues, dates, "Tracking_" + estimWindow + '_' + periodRebalance + '_' + targetPerformance * 10000 + '_' + lineChart.Series.Count), null);
             this.getIndicator(algoTracking);
             TrackingErrorOutput.Text = (trackingError*100).ToString("F")+" %";
             InformationRatioOutput.Text = (informationRatio * 100).ToString("F") + " %";

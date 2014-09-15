@@ -72,6 +72,20 @@ namespace LibrarySQL
             }
         }
 
+        public System.DateTime[] getDataDates(System.DateTime date, int period)
+        {
+            using (DataRetrieverDataContext dc = new DataRetrieverDataContext())
+            {
+                System.DateTime[] resultat = new System.DateTime[period];
+                var req = (from lines in dc.HistoIndices where lines.date >= date select lines.date).ToArray();
+                for (int i = 0; i < period; i++)
+                {
+                    resultat[i] = req[i];
+                }
+                return resultat;
+            }
+        }
+
         public double[] extractColumnIndex(double[,] table, int index)
         {
             double[] ret=new double[table.GetLength(0)];
