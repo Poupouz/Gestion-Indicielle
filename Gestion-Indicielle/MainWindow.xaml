@@ -39,7 +39,8 @@
                         <ColumnDefinition Width="10*" />
                     </Grid.ColumnDefinitions>
                     <WrapPanel Margin="10,10,10,10" Grid.Column="0" MaxHeight="550">
-                        <ListBox ItemsSource="{Binding ComponentInfoList}" Padding="10,10,10,10">
+                        <CheckBox x:Name="checkAll" Click="checkAll_Click" Background="#FF181818" Content="Check All" Height="29"/>
+                        <ListBox x:Name="listCheckBox" ItemsSource="{Binding ComponentInfoList}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <CheckBox Content="{Binding Tickers}" 

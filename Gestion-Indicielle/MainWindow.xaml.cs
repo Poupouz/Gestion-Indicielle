@@ -326,5 +326,26 @@ namespace Gestion_Indicielle
                 return;
             }
         }
+
+        private void checkAll_Click(object sender, RoutedEventArgs e)
+        {
+            if ((bool) checkAll.IsChecked)
+            {
+                foreach (var v in p.ComponentInfoList)
+                {
+                    v.IsSelected = true;
+                }
+                checkAll.Content = "Uncheck all";
+            }
+            else
+            {
+                foreach (var v in p.ComponentInfoList)
+                {
+                    v.IsSelected = false;
+                }
+                checkAll.Content = "Check all";
+            }
+            listCheckBox.Items.Refresh();
+        }
     }
 }
