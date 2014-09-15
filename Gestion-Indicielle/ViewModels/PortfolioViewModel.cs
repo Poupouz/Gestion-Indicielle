@@ -25,7 +25,7 @@ namespace Gestion_Indicielle.ViewModels
             al = dr.getTickers();
             foreach (var v in al)
             {
-                ComponentInfoList.Add(new ComponentInfo((string) hashtableTickers[v], true));
+                ComponentInfoList.Add(new ComponentInfo((string) hashtableTickers[v], false));
             }
             
         }
