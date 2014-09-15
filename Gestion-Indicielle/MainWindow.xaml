@@ -36,11 +36,16 @@
             <chartingToolkit:Chart  Name="lineChart" BorderThickness="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="438" Width="778">
                 <chartingToolkit:LineSeries >
                     <chartingToolkit:LineSeries.DataPointStyle>
-                        <Style TargetType="chartingToolkit:LineDataPoint">
-                            <Setter Property="Width" Value="0"/>
-                            <Setter Property="Height" Value="0"/>
+                        
+                        <Style x:Name="Timi" TargetType="chartingToolkit:LineDataPoint"   >
+                            <Setter Property="Visibility" Value="Hidden"/>
+                            
+                            
                         </Style>
+                       
                     </chartingToolkit:LineSeries.DataPointStyle>
+                   
+
                 </chartingToolkit:LineSeries>
                 
             </chartingToolkit:Chart >

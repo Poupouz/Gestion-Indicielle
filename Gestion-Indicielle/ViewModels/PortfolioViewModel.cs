@@ -12,6 +12,7 @@ namespace Gestion_Indicielle.ViewModels
     {
         public List<ComponentInfo> ComponentInfoList { get; private set; }
         private ArrayList al;
+        
 
         public PortfolioViewModel()
         {

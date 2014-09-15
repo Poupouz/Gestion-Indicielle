@@ -45,8 +45,10 @@ namespace Gestion_Indicielle
             
             ViewCharts Chart = new ViewCharts();
             Chart.createSerie(benchmarkIndex,"Cac40");
+            Style dataPointStyle = GetNewDataPointStyle();
+            Chart.series.ElementAt(0).DataPointStyle = dataPointStyle;
             lineChart.Series.Add(Chart.series.ElementAt(0));
-
+            
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -54,5 +56,22 @@ namespace Gestion_Indicielle
             tickers = new ArrayList(p.ComponentInfoList.Where(x => x.IsSelected).ToArray());
         }
 
+        private static Style GetNewDataPointStyle()
+        {
+            
+            Style style = new Style(typeof(DataPoint));
+            
+            Setter st2 = new Setter(DataPoint.BorderBrushProperty,
+                                        new SolidColorBrush(Colors.Red));
+            Setter st3 = new Setter(DataPoint.BorderThicknessProperty, new Thickness(0.1));
+            Setter st4 = new Setter(DataPoint.TemplateProperty, null);
+            
+            style.Setters.Add(st2);
+            style.Setters.Add(st3);
+
+            style.Setters.Add(st4);
+            return style;
+
+        }
     }
 }
