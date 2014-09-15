@@ -93,9 +93,9 @@
     </ApplicationDefinition>
     <Compile Include="Models\AlgorythmOfTracking.cs" />
     <Compile Include="Models\AverageHistoricYield.cs" />
-    <Compile Include="ViewModels\ComponentInfo.cs" />
-    <Compile Include="ViewModels\PortfolioViewModel.cs" />
-    <Compile Include="ViewModels\ViewCharts.cs" />
+    <Compile Include="Properties\ViewModels\ComponentInfo.cs" />
+    <Compile Include="Properties\ViewModels\PortfolioViewModel.cs" />
+    <Compile Include="Properties\ViewModels\ViewCharts.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

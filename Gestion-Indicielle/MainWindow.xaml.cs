@@ -3,13 +3,14 @@ using Gestion_Indicielle.ViewModels;
 using LibrarySQL;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.DataVisualization.Charting;
+using System.Windows.Input;
 using System.Windows.Media;
-using WallRiskEngine;
 
 namespace Gestion_Indicielle
 {
@@ -27,6 +28,8 @@ namespace Gestion_Indicielle
         private const int MAX_DAY_WINDOW = 1998;
         private Random random = new Random();
         private BackgroundWorker bw;
+
+        private int previousEstimationWindow = -1;
 
         public MainWindow()
         {
@@ -208,14 +211,18 @@ namespace Gestion_Indicielle
             ViewCharts chart = new ViewCharts();
             Application.Current.Dispatcher.Invoke(new displayChartsDelegate(displayCharts),
                 new object[] {chart, estimationWindow, rebalanceWindow, targetPerformance, worker});
-
         }
 
         private delegate void displayChartsDelegate(ViewCharts chart, int estimationWindow, int rebalanceWindow, double targetPerformance, BackgroundWorker worker);
 
         private void displayCharts(ViewCharts chart, int estimationWindow, int rebalanceWindow, double targetPerformance, BackgroundWorker worker)
         {
-            displayCAC40Chart(chart, MAX_DAY_WINDOW, estimationWindow);
+            if (previousEstimationWindow != estimationWindow)
+            {
+                Reset_Click(null, null);
+                displayCAC40Chart(chart, MAX_DAY_WINDOW, estimationWindow);
+                previousEstimationWindow = estimationWindow;
+            }
             worker.ReportProgress(30);
             displayTracking(chart, tickers, estimationWindow, rebalanceWindow, targetPerformance);
             worker.ReportProgress(50);
@@ -282,6 +289,21 @@ namespace Gestion_Indicielle
         public void Dispose()
         {
             bw.Dispose();
+        }
+
+        private void Reset_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                do {
+                    previousEstimationWindow = -1;
+                    lineChart.Series.RemoveAt(0);
+                } while (true);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return;
+            }
         }
     }
 }
