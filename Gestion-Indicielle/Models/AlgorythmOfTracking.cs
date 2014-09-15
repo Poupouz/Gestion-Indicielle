@@ -297,46 +297,62 @@ namespace Gestion_Indicielle.Models
         }
        
         //Fonction permettant de calculer la tracking error
-        public double computeTrackingError(double[,] currentReturnBench, double[,] currentReturnAssets)
+        public double computeTrackingError(double[,] matDataReturns)
+        //public double computeTrackingError(double[,] currentReturnBench, double[,] currentReturnAssets)
         {
 
             double trackingError = 0;
-            double[] deltaReturn = new double[currentReturnAssets.GetLength(0)];
-
-            //Si on a 2 vecteurs de taille différentes
-            if(currentReturnBench.GetLength(0) == currentReturnAssets.GetLength(0)){
-                for (int i = 0; i < currentReturnAssets.GetLength(0); i++)
-                {
-                    deltaReturn[i] = currentReturnAssets[i,0] -  currentReturnBench[i,0];
-                }
-                //Calcul de variance
-                double moyDelta = 0;
-
-                //Calcul de la moyenne
-                for (int i = 0; i < currentReturnAssets.GetLength(0); i++)
-                {
-                    moyDelta += deltaReturn[i];
-                }
-                moyDelta = moyDelta / deltaReturn.GetLength(0);
-
-                //Initialisation et calcul de la variance des ecarts de rentabilité
-                double variance = 0.0;
-
-                for (int i = 0; i < deltaReturn.GetLength(0); i++)
-                {
-                    variance += (moyDelta - deltaReturn[i]) * (moyDelta - deltaReturn[i]);
-                }
-
-                variance = variance / deltaReturn.GetLength(0);
-
-
-                trackingError = System.Math.Sqrt(variance);
-
+            double[] deltaReturn = new double[matDataReturns.GetLength(0)];
+           
+            for (int i = 0; i < matDataReturns.GetLength(0); i++)
+            {
+                deltaReturn[i] = matDataReturns[i,0] -  matDataReturns[i,1];
             }
+            //Calcul de variance
+            double moyDelta = 0;
+
+            //Calcul de la moyenne
+            for (int i = 0; i < deltaReturn.GetLength(0); i++)
+            {
+                moyDelta += deltaReturn[i];
+            }
+            moyDelta = moyDelta / deltaReturn.GetLength(0);
+
+            //Initialisation et calcul de la variance des ecarts de rentabilité
+            double variance = 0.0;
+
+            for (int i = 0; i < deltaReturn.GetLength(0); i++)
+            {
+                variance += (moyDelta - deltaReturn[i]) * (moyDelta - deltaReturn[i]);
+            }
+
+            variance = variance / deltaReturn.GetLength(0);
+
+
+            trackingError = System.Math.Sqrt(variance);
 
             return trackingError;
         }
 
+        public double computeInformationRation(double[,] matDataReturns, double trackingError)
+        {
+            double informationRatio = 0;
+            double[] deltaReturn = new double[matDataReturns.GetLength(0)];
+
+            for (int i = 0; i < matDataReturns.GetLength(0); i++)
+            {
+                deltaReturn[i] = matDataReturns[i, 0] - matDataReturns[i, 1];
+            }
+
+            //Calcul de la moyenne
+            for (int i = 0; i < deltaReturn.GetLength(0); i++)
+            {
+                informationRatio += deltaReturn[i];
+            }
+            informationRatio = informationRatio / deltaReturn.GetLength(0);
+
+            return informationRatio / trackingError;
+        }
 
 
     }//fin class
