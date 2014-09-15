@@ -45,10 +45,12 @@ namespace Gestion_Indicielle
             
             ViewCharts Chart = new ViewCharts();
             Chart.createSerie(benchmarkIndex,"Cac40");
+
             Style dataPointStyle = GetNewDataPointStyle();
             Chart.series.ElementAt(0).DataPointStyle = dataPointStyle;
             lineChart.Series.Add(Chart.series.ElementAt(0));
-            
+           
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
