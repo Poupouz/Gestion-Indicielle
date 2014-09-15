@@ -125,9 +125,39 @@ namespace WallRiskEngine
                 ref benchmarkExpectedReturn, ref nbEqConst, ref nbIneqConst, C, b, minWeights,
                 maxWeights, ref relativeTargetReturn, optimalWeights, ref info);
             /* Throw error if exit code != 0 */
+            
             if (exitCode != 0)
             {
-                throw new Exception();
+                if (exitCode == 5)
+                {
+
+                    throw new Exception("Error " + info.ToString() + ": Numerical problem in computation");
+                    
+                }
+                else if (exitCode == 2)
+                {
+                    throw new Exception("Error " + info.ToString() + ": Memory allocation problem");
+                }
+                else if (exitCode == 6)
+                {
+                    throw new Exception("Error " + info.ToString() + ": Warning, computation not optimal");
+                }
+                else if ((exitCode / 100) > 1 && (exitCode / 100)<1.5)
+                {
+                    throw new Exception("Error " + info.ToString() + ": Error in the " + (exitCode % 100) + "th argument size");
+                }
+                else if ((exitCode / 100) > 3 && (exitCode / 100) < 3.5)
+                {
+                    throw new Exception("Error " + info.ToString() + ": Illegal value(s) of the " + (exitCode % 100) + "th argument");
+                }
+                else if (exitCode >= 40 && exitCode < 49)
+                {
+                    throw new Exception("Error " + info.ToString() + ": License has expired or bad license");
+                }
+                else
+                {
+                    throw new Exception();
+                }
             }
             return optimalWeights;
         }

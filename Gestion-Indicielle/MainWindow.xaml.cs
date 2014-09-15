@@ -180,18 +180,39 @@ namespace Gestion_Indicielle
                 System.Windows.MessageBox.Show(exception.Message);
                 return;
             }
-            tickers = new ArrayList(p.ComponentInfoList
-            .Where(x => x.IsSelected)
-            .Select(y => PortfolioViewModel.hashtableCompanies[y.Tickers]).ToArray());
-            if (rebalanceWindow > MAX_DAY_WINDOW)
+            catch (OverflowException)
             {
-                System.Windows.MessageBox.Show("Estimation window must be lower than " + MAX_DAY_WINDOW);
+                MessageBox.Show("Number too high.", "Error");
                 return;
             }
 
+            tickers = new ArrayList(p.ComponentInfoList
+                .Where(x => x.IsSelected)
+                .Select(y => PortfolioViewModel.hashtableCompanies[y.Tickers]).ToArray());
+
+            if (tickers.Count <= 1)
+            {
+                System.Windows.MessageBox.Show("Non defined and positive matrix, please select more than one company", "Error");
+                return;
+            }
+            if (rebalanceWindow > MAX_DAY_WINDOW)
+            {
+                System.Windows.MessageBox.Show("Rebalance window must be lower than " + MAX_DAY_WINDOW, "Error");
+                return;
+            }
+            if (rebalanceWindow <= 0)
+            {
+                System.Windows.MessageBox.Show("Rebalance window must be positive", "Error");
+                return;
+            }
             if (estimationWindow <= tickers.Count)
             {
-                System.Windows.MessageBox.Show("Estimation window must be greater than the number of companies selected");
+                System.Windows.MessageBox.Show("Estimation window must be greater than the number of companies selected", "Error");
+                return;
+            }
+            if (estimationWindow > MAX_DAY_WINDOW)
+            {
+                System.Windows.MessageBox.Show("Estimation window must be lower than " + MAX_DAY_WINDOW, "Error");
                 return;
             }
 
@@ -204,7 +225,7 @@ namespace Gestion_Indicielle
                     return;
             }
 
-            if (targetPerformance > 0.0004)
+            //if (targetPerformance > 0.0004)
 
             worker.ReportProgress(20);
             
@@ -224,7 +245,14 @@ namespace Gestion_Indicielle
                 previousEstimationWindow = estimationWindow;
             }
             worker.ReportProgress(30);
-            displayTracking(chart, tickers, estimationWindow, rebalanceWindow, targetPerformance);
+            try
+            {
+                displayTracking(chart, tickers, estimationWindow, rebalanceWindow, targetPerformance);
+            }
+            catch (Exception e)
+            {
+                System.Windows.MessageBox.Show(e.Message,"Error");
+            }
             worker.ReportProgress(50);
         }
 
@@ -237,13 +265,6 @@ namespace Gestion_Indicielle
         private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             ProgressBar.Value = 100;
-        }     
-
-        private delegate void displayDelegate(int estimationWindow, int rebalanceWindow);
-
-        private void displayChart(int estimationWindow, int rebalanceWindow)
-        {
-
         }
 
         /// <summary>
