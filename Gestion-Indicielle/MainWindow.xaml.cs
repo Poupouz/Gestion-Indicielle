@@ -1,25 +1,14 @@
-﻿using System;
+﻿using Gestion_Indicielle.Models;
+using Gestion_Indicielle.ViewModels;
+using LibrarySQL;
+using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using LibrarySQL;
-using Gestion_Indicielle.Models;
-using Gestion_Indicielle.ViewModels;
-using Microsoft.Windows.Controls;
 using System.Windows.Controls.DataVisualization.Charting;
-using WallRiskEngine;
+using System.Windows.Media;
 
 namespace Gestion_Indicielle
 {
@@ -34,12 +23,22 @@ namespace Gestion_Indicielle
         ArrayList tickers;
         private const int MAX_DAY_WINDOW = 1998;
         private Random random = new Random();
+        private BackgroundWorker bw;
 
         public MainWindow()
         {
             InitializeComponent();
             p = new PortfolioViewModel();
             this.DataContext = p;
+            lineChart.Series.RemoveAt(0);
+
+            /* Init background worker */
+            bw = new BackgroundWorker();
+            bw.WorkerSupportsCancellation = true;
+            bw.WorkerReportsProgress = true;
+            bw.DoWork += new DoWorkEventHandler(bw_DoWork);
+            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_RunWorkerCompleted);
+            bw.ProgressChanged += new ProgressChangedEventHandler(bw_ProgressChanged);
         }
 
         private void addChartWithoutDots(ViewCharts chart, LineSeries series, Style dataPointStyle)
@@ -54,14 +53,14 @@ namespace Gestion_Indicielle
         /// Get the CAC40 data for given numberOfDays and plot it into chart
         /// </summary>
         /// <param name="numberOfDays"></param>
-        private void displayCAC40Chart(ViewCharts chart, int numberOfDays)
+        private void displayCAC40Chart(ViewCharts chart, int numberOfDays, int estimationWindow)
         {
             DataRetriever dr = new DataRetriever();
             double[] tmp = dr.extractColumnIndex(dr.getDataBenchmark(new DateTime(2006, 1, 2, 0, 0, 0), numberOfDays), 0);
-            benchmarkIndex = new double[tmp.GetLength(0)-int.Parse(EstimationWindowInput.Text)];
+            benchmarkIndex = new double[tmp.GetLength(0) - estimationWindow];
             for (int i = 0; i < benchmarkIndex.GetLength(0); i++)
             {
-                benchmarkIndex[i] = tmp[i + int.Parse(EstimationWindowInput.Text)];
+                benchmarkIndex[i] = tmp[i + estimationWindow];
             }
             addChartWithoutDots(chart, chart.createSerie(benchmarkIndex, "Cac40"),  CACStyle());
         }
@@ -81,19 +80,62 @@ namespace Gestion_Indicielle
             addChartWithoutDots(chart, chart.createSerie(trackingValues, "Tracking"), null);
         }
 
+        private class LaunchArguments
+        {
+            private String _estimationWindowInput;
+
+            public String EstimationWindowInput
+            {
+                get { return _estimationWindowInput; }
+            }
+            private String _rebalanceWindowInput;
+
+            public String RebalanceWindowInput
+            {
+                get { return _rebalanceWindowInput; }
+            }
+
+            public LaunchArguments(String estimationWindowInput, String rebalanceWindowInput)
+            {
+                _estimationWindowInput = estimationWindowInput;
+                _rebalanceWindowInput = rebalanceWindowInput;
+            }
+        }
+
         /// <summary>
         /// Action when Launch Simulation Button is clicked
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="e"></param
         private void Launch_Simulation_Click(object sender, RoutedEventArgs e)
         {
+            ProgressBar.Value = 0;
+            if (bw.IsBusy != true)
+            {
+                // Start the asynchronous operation.
+                bw.RunWorkerAsync(new LaunchArguments(EstimationWindowInput.Text, RebalanceWindowInput.Text));
+            }
+        } 
+        
+        private void Cancel_Simulation_Click(object sender, RoutedEventArgs e)
+        {
+            if (bw.WorkerSupportsCancellation == true)
+            {
+                // Cancel the asynchronous operation.
+                bw.CancelAsync();
+            }
+        }
+
+        private void bw_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker worker = sender as BackgroundWorker;
+
             int estimationWindow;
             int rebalanceWindow;
             try
             {
-                estimationWindow = int.Parse(EstimationWindowInput.Text);
-                rebalanceWindow = int.Parse(RebalanceWindowInput.Text);
+                estimationWindow = int.Parse( ((LaunchArguments) e.Argument).EstimationWindowInput );
+                rebalanceWindow = int.Parse( ((LaunchArguments) e.Argument).RebalanceWindowInput );
             }
             catch (System.FormatException exception)
             {
@@ -117,12 +159,43 @@ namespace Gestion_Indicielle
                 return;
             }
 
+            worker.ReportProgress(20);
+            
             ViewCharts chart = new ViewCharts();
-            lineChart.Series.RemoveAt(0);
-            displayCAC40Chart(chart, MAX_DAY_WINDOW);
+            Application.Current.Dispatcher.Invoke(new displayChartsDelegate(displayCharts),
+                new object[] {chart, estimationWindow, rebalanceWindow, worker });
+
+        }
+
+        private delegate void displayChartsDelegate(ViewCharts chart, int estimationWindow, int rebalanceWindow, BackgroundWorker worker);
+
+        private void displayCharts(ViewCharts chart, int estimationWindow, int rebalanceWindow, BackgroundWorker worker)
+        {
+            displayCAC40Chart(chart, MAX_DAY_WINDOW, estimationWindow);
+            worker.ReportProgress(30);
 
             displayTracking(chart, tickers, estimationWindow, rebalanceWindow);
+            worker.ReportProgress(50);
         }
+
+        // This event handler updates the progress.
+        private void bw_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            ProgressBar.Value = e.ProgressPercentage;
+        }
+        // This event handler deals with the results of the background operation.
+        private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            ProgressBar.Value = 100;
+        }     
+
+        private delegate void displayDelegate(int estimationWindow, int rebalanceWindow);
+
+        private void displayChart(int estimationWindow, int rebalanceWindow)
+        {
+
+        }
+        
 
         /// <summary>
         /// <summary>
@@ -131,9 +204,9 @@ namespace Gestion_Indicielle
         /// <returns></returns>
         private Style GetNewDataPointStyle()
         {
-            Color background = Color.FromRgb((byte)this.random.Next(100),
-                                             (byte)this.random.Next(100),
-                                             (byte)this.random.Next(100));
+            Color background = Color.FromRgb((byte)this.random.Next(150),
+                                             (byte)this.random.Next(150),
+                                             (byte)this.random.Next(150));
             Style style = new Style(typeof(DataPoint));
             Setter st1 = new Setter(DataPoint.BackgroundProperty,
                                         new SolidColorBrush(background));
