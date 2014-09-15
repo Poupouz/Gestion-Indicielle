@@ -6,6 +6,28 @@
         x:Class="Gestion_Indicielle.MainWindow"
         Title="Index Management" WindowState="Maximized">
 
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Light Theme -->
+                <ResourceDictionary Source="Themes/Metro/Light/Metro.MSControls.Core.Implicit.xaml" />
+                <ResourceDictionary Source="Themes/Metro/Light/Metro.MSControls.Toolkit.Implicit.xaml" />
+
+                <!-- Dark Theme -->
+                <!--<ResourceDictionary Source="Themes/Metro/Dark/MetroDark.MSControls.Core.Implicit.xaml" />
+                <ResourceDictionary Source="Themes/Metro/Dark/MetroDark.MSControls.Toolkit.Implicit.xaml" />-->
+
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Light Theme -->
+            <SolidColorBrush x:Key="BackgroundKey" Color="#FFFFFF" />
+
+            <!-- Dark Theme -->
+            <!--<SolidColorBrush x:Key="BackgroundKey" Color="#FF181818" />-->
+
+        </ResourceDictionary>
+    </Window.Resources>
+
     <Grid Margin="0,57,0,0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*" />
@@ -44,6 +66,6 @@
                 </chartingToolkit:LineSeries>
             </chartingToolkit:Chart>
         </WrapPanel>
-        <TextBlock HorizontalAlignment="Left" Margin="10,-51,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Grid.ColumnSpan="2" Height="41" Width="242" FontFamily="Myriad Pro" FontSize="32"><Run Language="fr-fr" Text="Index Management"/></TextBlock>
+        <TextBlock HorizontalAlignment="Left" Margin="10,-51,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Grid.ColumnSpan="3" Height="41" FontFamily="Myriad Pro" FontSize="32"><Run Language="fr-fr" Text="Index Management"/></TextBlock>
     </Grid>
 </Window>
