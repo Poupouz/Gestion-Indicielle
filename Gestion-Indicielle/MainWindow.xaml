@@ -46,12 +46,19 @@
         </WrapPanel>
 
         <StackPanel Orientation="Vertical" Margin="10,10,10,10" Grid.Column="1">
+            
             <TextBlock  HorizontalAlignment="Left" TextWrapping="Wrap" Text="Estimation window (in days)" VerticalAlignment="Top" Style="{StaticResource SubHeaderTextBlockStyle}"/>
             <TextBox  x:Name="EstimationWindowInput" HorizontalAlignment="Left" TextWrapping="Wrap" MinWidth="120" HorizontalContentAlignment="Stretch" VerticalAlignment="Top" />
+            
             <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Time between 2 rebalances (in days)" VerticalAlignment="Top" Style="{StaticResource SubHeaderTextBlockStyle}"/>
             <TextBox x:Name="RebalanceWindowInput" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" MinWidth="120"/>
+            
+            <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Target Performance (in BP)" VerticalAlignment="Top" Style="{StaticResource SubHeaderTextBlockStyle}"/>
+            <TextBox x:Name="TargetPerformanceInput" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" MinWidth="120"/>
+            
             <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Portfolio value (in EUR)" VerticalAlignment="Top" Style="{StaticResource SubHeaderTextBlockStyle}"/>
             <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Style="{StaticResource SubHeaderTextBlockStyle}" Foreground="#FFBABABA"/>
+            
             <Button Content="Launch Simulation" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,10,0,5" Click="Launch_Simulation_Click"/>
             <Button Content="Cancel Simulation" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,10,0,5" Click="Cancel_Simulation_Click"/>
             <ProgressBar x:Name="ProgressBar" Margin="10, 10, 10, 30" Height="15" />

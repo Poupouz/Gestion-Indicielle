@@ -73,13 +73,21 @@ namespace Gestion_Indicielle.Models
             set { nbDate = value; }
         }
 
+        private double _targetPerformance;
 
-        public AlgorythmOfTracking(ArrayList tickers, double initCash, int estimWin, int periodRebalance)
+        public double TargetPerformance
+        {
+            get { return _targetPerformance; }
+            set { _targetPerformance = value; }
+        }
+
+        public AlgorythmOfTracking(ArrayList tickers, double initCash, int estimWin, int periodRebalance, double targetPerformance)
         {
             Tickers = tickers;
             InitialCash = initCash;
             EstimWindows = estimWin;
             PeriodOfRebalance = periodRebalance;
+            TargetPerformance = targetPerformance;
             Ahy = new AverageHistoricYield();
             StartDate = new DateTime(2006, 1, 2, 0, 0, 0);
             HistPricePortFolio = new ArrayList();
@@ -206,7 +214,7 @@ namespace Gestion_Indicielle.Models
             double[] covBenchWithAsset = Ahy.extractCovReturnBench(covMat, covMat.GetLength(0) - 1);
 
             //Calcul de poids optimaux
-            double[] optimWeights = API.OptimPortfolioWeight(covAssets,meanReturnEstimData,covBenchWithAsset,meanReturnBenchmark[0],-0.00001);
+            double[] optimWeights = API.OptimPortfolioWeight(covAssets,meanReturnEstimData,covBenchWithAsset,meanReturnBenchmark[0],TargetPerformance);
 
             return optimWeights;
         }
@@ -334,7 +342,7 @@ namespace Gestion_Indicielle.Models
             return trackingError;
         }
 
-        public double computeInformationRation(double[,] matDataReturns, double trackingError)
+        public double computeInformationRatio(double[,] matDataReturns, double trackingError)
         {
             double informationRatio = 0;
             double[] deltaReturn = new double[matDataReturns.GetLength(0)];

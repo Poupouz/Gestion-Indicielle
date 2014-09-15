@@ -16,7 +16,7 @@ namespace Gestion_Indicielle
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IDisposable
     {
         private double[] benchmarkIndex;
         private double[] trackingValues;
@@ -82,11 +82,10 @@ namespace Gestion_Indicielle
                 }
                 AverageHistoricYield ahy = new AverageHistoricYield();
                 trackingError = algo.computeTrackingError(ahy.getReturnsMatrix(matData,1));
-                informationRatio = algo.computeInformationRation(ahy.getReturnsMatrix(matData, 1), trackingError);
+                informationRatio = algo.computeInformationRatio(ahy.getReturnsMatrix(matData, 1), trackingError);
 
             }
         }
-
 
         /// <summary>
         /// Compute tracking and display data into the given chart
@@ -96,9 +95,9 @@ namespace Gestion_Indicielle
         /// <param name="initCash"></param>
         /// <param name="estimWindow"></param>
         /// <param name="periodRebalance"></param>
-        private void displayTracking(ViewCharts chart, ArrayList tickers, int estimWindow, int periodRebalance)
+        private void displayTracking(ViewCharts chart, ArrayList tickers, int estimWindow, int periodRebalance, double targetPerformance)
         {
-            AlgorythmOfTracking algoTracking = new AlgorythmOfTracking(tickers, 100, estimWindow, periodRebalance);
+            AlgorythmOfTracking algoTracking = new AlgorythmOfTracking(tickers, 100, estimWindow, periodRebalance, targetPerformance);
             trackingValues = (double[])algoTracking.tracking().ToArray(typeof(double));
             addChartWithoutDots(chart, chart.createSerie(trackingValues, "Tracking"), null);
             this.getIndicator(algoTracking);
@@ -121,11 +120,19 @@ namespace Gestion_Indicielle
                 get { return _rebalanceWindowInput; }
             }
 
-            public LaunchArguments(String estimationWindowInput, String rebalanceWindowInput)
+            private String _targetPerformanceInput;
+
+            public String TargetPerformanceInput
+            {
+                get { return _targetPerformanceInput; }
+            }
+            public LaunchArguments(String estimationWindowInput, String rebalanceWindowInput, String targetPerformanceInput)
             {
                 _estimationWindowInput = estimationWindowInput;
                 _rebalanceWindowInput = rebalanceWindowInput;
+                _targetPerformanceInput = targetPerformanceInput;
             }
+
         }
 
         /// <summary>
@@ -139,7 +146,7 @@ namespace Gestion_Indicielle
             if (bw.IsBusy != true)
             {
                 // Start the asynchronous operation.
-                bw.RunWorkerAsync(new LaunchArguments(EstimationWindowInput.Text, RebalanceWindowInput.Text));
+                bw.RunWorkerAsync(new LaunchArguments(EstimationWindowInput.Text, RebalanceWindowInput.Text, TargetPerformanceInput.Text));
             }
         } 
         
@@ -158,10 +165,12 @@ namespace Gestion_Indicielle
 
             int estimationWindow;
             int rebalanceWindow;
+            double targetPerformance;
             try
             {
                 estimationWindow = int.Parse( ((LaunchArguments) e.Argument).EstimationWindowInput );
                 rebalanceWindow = int.Parse( ((LaunchArguments) e.Argument).RebalanceWindowInput );
+                targetPerformance = double.Parse(((LaunchArguments)e.Argument).TargetPerformanceInput.Replace(".", ","));
             }
             catch (System.FormatException exception)
             {
@@ -176,27 +185,39 @@ namespace Gestion_Indicielle
                 System.Windows.MessageBox.Show("Estimation window must be lower than " + MAX_DAY_WINDOW);
                 return;
             }
+
             if (estimationWindow <= tickers.Count)
             {
                 System.Windows.MessageBox.Show("Estimation window must be greater than the number of companies selected");
                 return;
             }
 
+            if (targetPerformance > 100)
+            {
+                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Target performance : " + targetPerformance + " is really high, are you sure you want to continue ?", 
+                    "Target performance confirmation", 
+                    System.Windows.MessageBoxButton.YesNo);
+                if (messageBoxResult == MessageBoxResult.No)
+                    return;
+            }
+
+            if (targetPerformance > 0.0004)
+
             worker.ReportProgress(20);
             
             ViewCharts chart = new ViewCharts();
             Application.Current.Dispatcher.Invoke(new displayChartsDelegate(displayCharts),
-                new object[] {chart, estimationWindow, rebalanceWindow, worker });
+                new object[] {chart, estimationWindow, rebalanceWindow, targetPerformance, worker});
 
         }
 
-        private delegate void displayChartsDelegate(ViewCharts chart, int estimationWindow, int rebalanceWindow, BackgroundWorker worker);
+        private delegate void displayChartsDelegate(ViewCharts chart, int estimationWindow, int rebalanceWindow, double targetPerformance, BackgroundWorker worker);
 
-        private void displayCharts(ViewCharts chart, int estimationWindow, int rebalanceWindow, BackgroundWorker worker)
+        private void displayCharts(ViewCharts chart, int estimationWindow, int rebalanceWindow, double targetPerformance, BackgroundWorker worker)
         {
             displayCAC40Chart(chart, MAX_DAY_WINDOW, estimationWindow);
             worker.ReportProgress(30);
-            displayTracking(chart, tickers, estimationWindow, rebalanceWindow);
+            displayTracking(chart, tickers, estimationWindow, rebalanceWindow, targetPerformance);
             worker.ReportProgress(50);
         }
 
@@ -256,6 +277,11 @@ namespace Gestion_Indicielle
             style.Setters.Add(st3);
             style.Setters.Add(st4);
             return style;
+        }
+
+        public void Dispose()
+        {
+            bw.Dispose();
         }
     }
 }
