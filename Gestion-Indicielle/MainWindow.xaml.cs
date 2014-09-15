@@ -102,7 +102,7 @@ namespace Gestion_Indicielle
         {
             AlgorythmOfTracking algoTracking = new AlgorythmOfTracking(tickers, 100, estimWindow, periodRebalance, targetPerformance);
             trackingValues = (double[])algoTracking.tracking().ToArray(typeof(double));
-            addChartWithoutDots(chart, chart.createSerie(trackingValues, "Tracking"), null);
+            addChartWithoutDots(chart, chart.createSerie(trackingValues, "Tracking_" + estimWindow + '_' + periodRebalance + '_' + targetPerformance * 10000 + '_' + lineChart.Series.Count), null);
             this.getIndicator(algoTracking);
             TrackingErrorOutput.Text = (trackingError*100).ToString("F")+" %";
             InformationRatioOutput.Text = (informationRatio * 100).ToString("F") + " %";
@@ -173,7 +173,7 @@ namespace Gestion_Indicielle
             {
                 estimationWindow = int.Parse( ((LaunchArguments) e.Argument).EstimationWindowInput );
                 rebalanceWindow = int.Parse( ((LaunchArguments) e.Argument).RebalanceWindowInput );
-                targetPerformance = double.Parse(((LaunchArguments)e.Argument).TargetPerformanceInput.Replace(".", ","));
+                targetPerformance = 0.0001*double.Parse(((LaunchArguments)e.Argument).TargetPerformanceInput.Replace(".", ","));
             }
             catch (System.FormatException exception)
             {
@@ -216,7 +216,7 @@ namespace Gestion_Indicielle
                 return;
             }
 
-            if (targetPerformance > 100)
+            if (targetPerformance > 0.001)
             {
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Target performance : " + targetPerformance + " is really high, are you sure you want to continue ?", 
                     "Target performance confirmation", 
